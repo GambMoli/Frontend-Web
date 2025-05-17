@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      >
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Iniciar Sesión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <h:outputStylesheet name="css/stylesLogin.css" />
+</h:head>
+
+<h:body>
+    <section class="Container-principal">
+        <div class="izquierda">
+            <h:graphicImage name="Assets/loginImage.png" alt="Logo UDES" styleClass="logo" />
+        </div>
+        <div class="login-container">
+            <div class="ContainerSecundarioForm">
+                <h2>Bienvenido</h2>
+
+                <h:panelGroup rendered="#{not empty param['error']}">
+                    <div class="alert alert-danger">
+                        <h:outputText value="Por favor complete todos los campos." rendered="#{param['error'] eq 'emptyfields'}" />
+                        <h:outputText value="Credenciales incorrectas. Intente nuevamente." rendered="#{param['error'] eq 'authfailed'}" />
+                        <h:outputText value="Error del sistema. Intente más tarde." rendered="#{param['error'] eq 'system'}" />
+                        <h:outputText value="Error de autenticación. Contacte al administrador." rendered="#{param['error'] eq 'invalidtoken'}" />
+                    </div>
+                </h:panelGroup>
+
+                <h:form>
+                    <div class="mb-3">
+                        <h:outputLabel for="email" value="Email" styleClass="form-label" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                            <h:inputText id="email" value="#{loginController.email}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h:outputLabel for="password" value="Password" styleClass="form-label" />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+                            <h:inputSecret id="password" value="#{loginController.password}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <h:commandButton value="Iniciar Sesión" action="#{loginController.login}" styleClass="btn btn-primary" />
+                    </div>
+
+                </h:form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</h:body>
+</html>
