@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:outputStylesheet name="header/styles.css" />
+
+    <div class="udes-header">
+        <div class="container-fluid px-0">
+            <nav class="navbar navbar-expand navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center">
+                        <a class="navbar-brand me-3" href="#{request.contextPath}/views/HomePage/Home.xhtml">
+                            <img class="udes-logo" src="#{request.contextPath}/assets/images/logo2.png" alt="Logo UDES" />
+
+                        </a>
+                        <div class="navbar-nav">
+                            <a class="nav-link" href="#">Trámites Académicos</a>
+                            <a class="nav-link" href="#">Record de notas</a>
+                            <a class="nav-link" href="#">Plan de estudio</a>
+                            <a class="nav-link" href="#{request.contextPath}/views/enrollment/enroll.xhtml">Matrícula</a>
+                            <a class="nav-link" href="#">Horario</a>
+                            <a class="nav-link" href="#">Notas</a>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <a href="#" class="nav-icon me-3"><i class="fas fa-bell"></i></a>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle nav-link user-dropdown" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i> LUIS ALEJANDRO VERGEL IRLET
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#{request.contextPath}/views/user_config/profile.xhtml">Perfil</a></li>
+                                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+</ui:composition>
