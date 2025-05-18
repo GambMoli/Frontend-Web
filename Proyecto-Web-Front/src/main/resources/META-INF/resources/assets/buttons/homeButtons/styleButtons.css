@@ -1,0 +1,47 @@
+/* Botón principal */
+.btn.btn-primary {
+    width: 30%;
+    height: 8vh;
+    background-color: #fff;
+    color: #28537E;
+    border: 2px solid #28537E;
+    border-radius: 10px;
+    margin: 20px 25px 30px 10px; /* top right bottom left */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn.btn-primary:hover {
+    background-color: #28537E;
+    color: #fff;
+}
+
+/* Contenedor principal de la sección */
+.ContainerHome {
+    background-color: #fff;
+    width: 50%;
+    padding: 30px;
+    margin-left: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    height:70vh;
+}
+
+/* Contenedor general de los botones */
+.ContenedorBotones {
+
+}
+
+/* Para agrupar tres botones en una fila */
+.tresBotones {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Para agrupar dos botones centrados */
+.dosBotones {
+    display: flex;
+    justify-content: start;
+    width:94%;
+}

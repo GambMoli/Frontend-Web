@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <!-- Bootstrap CSS -->
+    <h:outputStylesheet library="webjars" name="bootstrap/5.3.3/css/bootstrap.min.css" />
+
+    <!-- Font Awesome -->
+    <h:outputStylesheet library="webjars" name="font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Estilos personalizados -->
+    <h:outputStylesheet name="assets/buttons/homeButtons/styleButtons.css" />
+
+    <!-- Bootstrap Bundle JS -->
+    <h:outputScript library="webjars" name="bootstrap/5.3.3/js/bootstrap.bundle.min.js" />
+
+    <!-- Buttons -->
+    <div class="ContainerHome">
+        <div class="ContenedorBotones">
+            <div class="tresBotones">
+                <h:link outcome="/views/chats/chats" styleClass="btn btn-primary">
+                    <div>
+                        <span><i class="fa-brands fa-rocketchat"></i></span>
+                    </div>
+                    Mensajería
+                </h:link>
+
+                <h:link outcome="/views/chats/chats" styleClass="btn btn-primary">
+                    <div>
+                        <span><i class="fa-solid fa-briefcase"></i></span>
+                    </div>
+                    Matrícula
+                </h:link>
+
+                <h:link outcome="/views/chats/chats" styleClass="btn btn-primary">
+                    <div>
+                        <span><i class="fa-solid fa-pen-to-square"></i></span>
+                    </div>
+                    Notas
+                </h:link>
+            </div>
+
+            <div class="dosBotones">
+                <h:link outcome="/views/chats/chats" styleClass="btn btn-primary">
+                    <div>
+                        <span><i class="fa-solid fa-calendar-days"></i></span>
+                    </div>
+                    Horario
+                </h:link>
+
+                <h:link outcome="/views/chats/chats" styleClass="btn btn-primary">
+                    <div>
+                        <span><i class="fa-solid fa-user"></i></span>
+                    </div>
+                    Usuarios
+                </h:link>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

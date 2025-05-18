@@ -2,26 +2,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      >
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <meta charset="UTF-8" />
     <title>Iniciar Sesión</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <h:outputStylesheet name="css/stylesLogin.css" />
+
+    <!-- Bootstrap y FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- Estilos propios -->
+    <h:outputStylesheet name="styles/stylesLogin.css" />
 </h:head>
 
 <h:body>
+    <!-- Header incluido -->
+    <ui:include src="/header/header.xhtml" />
+
     <section class="Container-principal">
+        <!-- Imagen izquierda -->
         <div class="izquierda">
-            <h:graphicImage name="Assets/loginImage.png" alt="Logo UDES" styleClass="logo" />
+            <img class="logo" src="#{request.contextPath}/assets/images/loginImage.png" alt="Logo" />
         </div>
+
+        <!-- Contenedor del formulario -->
         <div class="login-container">
             <div class="ContainerSecundarioForm">
                 <h2>Bienvenido</h2>
 
+                <!-- Mensajes de error -->
                 <h:panelGroup rendered="#{not empty param['error']}">
                     <div class="alert alert-danger">
                         <h:outputText value="Por favor complete todos los campos." rendered="#{param['error'] eq 'emptyfields'}" />
@@ -31,7 +41,9 @@
                     </div>
                 </h:panelGroup>
 
+                <!-- Formulario JSF -->
                 <h:form>
+                    <!-- Campo email -->
                     <div class="mb-3">
                         <h:outputLabel for="email" value="Email" styleClass="form-label" />
                         <div class="input-group">
@@ -40,6 +52,7 @@
                         </div>
                     </div>
 
+                    <!-- Campo contraseña -->
                     <div class="mb-3">
                         <h:outputLabel for="password" value="Password" styleClass="form-label" />
                         <div class="input-group">
@@ -48,15 +61,16 @@
                         </div>
                     </div>
 
+                    <!-- Botón -->
                     <div class="d-grid gap-2">
                         <h:commandButton value="Iniciar Sesión" action="#{loginController.login}" styleClass="btn btn-primary" />
                     </div>
-
                 </h:form>
             </div>
         </div>
     </section>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </h:body>
 </html>
