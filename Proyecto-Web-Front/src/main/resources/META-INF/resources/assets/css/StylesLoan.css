@@ -1,0 +1,56 @@
+/* Estilo para el body */
+body {
+    background-color: #f2f2f2 !important;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Estilo para los botones primarios */
+.btn-primary {
+    background-color: #28537E !important;
+    border-color: #28537E !important;
+}
+
+.btn-primary:hover {
+    background-color: #1d3d5f !important;
+    border-color: #1d3d5f !important;
+}
+
+/* Estilo para el botón de información */
+.btn-info {
+    background-color: #28537E !important;
+    border-color: #28537E !important;
+    color: white !important;
+}
+
+.btn-info:hover {
+    background-color: #1d3d5f !important;
+    border-color: #1d3d5f !important;
+}
+
+/* Estilo para las tarjetas */
+.card {
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-img-top {
+    height: 30vh !important;  /* 30% del viewport height */
+    width: auto !important;
+    object-fit: contain !important;
+    margin: 0 auto !important;
+    padding: 10px !important;
+}
+
+/* Opcional: Contenedor para mantener proporción */
+.card-img-container {
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}

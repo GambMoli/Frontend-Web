@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      lang="es">
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Materiales</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <h:outputStylesheet library="assets" name="css/StylesLoan.css" />
+</h:head>
+<h:body>
+    <!-- Header -->
+    <ui:include src="/assets/components/header/header.xhtml" />
+
+
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="m-0">Materiales Disponibles</h2>
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalTabla">
+                Ver Préstamos
+            </button>
+        </div>
+
+        <!-- Contenedor de tarjetas -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Card 1 -->
+            <div class="col">
+                <div class="card">
+                    <!-- Cambia todas las rutas de imágenes para que coincidan con tu estructura -->
+                    <img src="#{resource['assets/images/Libro1.png']}" class="card-img-top img-thumbnail" alt="Libro" />
+                    <div class="card-body">
+                        <h5 class="card-title">Libro PEPITO</h5>
+                        <p class="card-text">Código: 789GHJ</p>
+                        <p class="card-text">Estado: ACTIVO</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReserva">
+                            Reservar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col">
+                <div class="card">
+                    <!-- Cambia todas las rutas de imágenes para que coincidan con tu estructura -->
+                    <img src="#{resource['assets/images/Libro2.png']}" class="card-img-top img-thumbnail" alt="Libro" />
+                    <div class="card-body">
+                        <h5 class="card-title">Libro MARÍA</h5>
+                        <p class="card-text">Código: 456JKL</p>
+                        <p class="card-text">Estado: ACTIVO</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReserva">
+                            Reservar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col">
+                <div class="card ">
+                    <!-- Cambia todas las rutas de imágenes para que coincidan con tu estructura -->
+                    <img src="#{resource['assets/images/Libro3.png']}" class="card-img-top img-thumbnail" alt="Libro" />
+                    <div class="card-body">
+                        <h5 class="card-title">Libro CIEN AÑOS</h5>
+                        <p class="card-text">Código: 123ABC</p>
+                        <p class="card-text">Estado: ACTIVO</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReserva">
+                            Reservar
+
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal con Tabla -->
+    <div class="modal fade" id="modalTabla" tabindex="-1" aria-labelledby="modalTablaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTablaLabel">Listado de Préstamos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Código</th>
+                            <th>Material</th>
+                            <th>Fecha Préstamo</th>
+                            <th>Fecha Límite</th>
+                            <th>Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>LOAN-2023-003</td>
+                            <td>Libro PEPITO</td>
+                            <td>2024-11-14</td>
+                            <td>2024-11-29</td>
+                            <td>ACTIVE</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Reserva -->
+    <div class="modal fade" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalReservaLabel">Formulario de Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <h:form>
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Código del préstamo</label>
+                            <h:inputText id="code" styleClass="form-control" value="#{reservaBean.codigo}" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="loanDate" class="form-label">Fecha de préstamo</label>
+                            <h:inputText id="loanDate" type="datetime-local" styleClass="form-control" value="#{reservaBean.fechaPrestamo}" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="materialId" class="form-label">ID del Material</label>
+                            <h:inputText id="materialId" type="number" styleClass="form-control" value="#{reservaBean.materialId}" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="studentId" class="form-label">ID del Estudiante</label>
+                            <h:inputText id="studentId" type="number" styleClass="form-control" value="#{reservaBean.estudianteId}" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Estado</label>
+                            <h:selectOneMenu id="status" styleClass="form-select" value="#{reservaBean.estado}">
+                                <f:selectItem itemLabel="ACTIVE" itemValue="ACTIVE" />
+                                <f:selectItem itemLabel="RETURNED" itemValue="RETURNED" />
+                                <f:selectItem itemLabel="OVERDUE" itemValue="OVERDUE" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="mb-3">
+                            <label for="returnState" class="form-label">Estado de Devolución</label>
+                            <h:inputText id="returnState" styleClass="form-control" value="#{reservaBean.estadoDevolucion}" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <h:commandButton value="Guardar Reserva" styleClass="btn btn-primary"
+                                             action="#{reservaBean.guardarReserva}" />
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</h:body>
+</html>
