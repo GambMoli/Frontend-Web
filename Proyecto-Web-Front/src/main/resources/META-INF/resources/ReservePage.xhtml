@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Reservas</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Estilos propios -->
+    <h:outputStylesheet name="css/StylesReserve.css" library="assets" />
+</h:head>
+
+<h:body>
+
+    <!-- Header -->
+    <ui:include src="/assets/components/header/header.xhtml" />
+
+
+    <!-- Botón para abrir modal -->
+    <div class="containerButton">
+        <div class="ContainerSecTittle"><h3>Reservas De Espacíos</h3></div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Crear Reserva
+        </button>
+    </div>
+
+    <!-- Tabla de reservas -->
+    <div class="ContainerTable ">
+        <table class="table table-bordered table-striped">
+            <thead class="table-white">
+            <tr>
+                <th>Código</th>
+                <th>Fecha</th>
+                <th>Hora Inicio</th>
+                <th>Hora Fin</th>
+                <th>Estado</th>
+                <th>Lugar</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>RES12345</td>
+                <td>2025-04-21</td>
+                <td>12:00:00</td>
+                <td>13:00:00</td>
+                <td>No Disponible</td>
+                <td>Laboratorio</td>
+            </tr>
+            <ui:repeat var="reserva" value="#{sessionScope.listaReservas}">
+                <tr>
+                    <td>#{reserva.id}</td>
+                    <td>#{reserva.codigo}</td>
+                    <td>#{reserva.fecha}</td>
+                    <td>#{reserva.horaInicio}</td>
+                    <td>#{reserva.horaFin}</td>
+                    <td>#{reserva.estado}</td>
+                    <td>#{reserva.lugar.nombre}</td>
+                </tr>
+            </ui:repeat>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <!-- Modal con formulario JSF -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <h:form prependId="false">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Crear Reserva</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="codigo">Código</label>
+                            <h:inputText id="codigo" value="#{reservaBean.codigo}" styleClass="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fecha">Fecha</label>
+                            <h:inputText id="fecha" value="#{reservaBean.fecha}" styleClass="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="horaInicio">Hora Inicio</label>
+                            <h:inputText id="horaInicio" value="#{reservaBean.horaInicio}" styleClass="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="horaFin">Hora Fin</label>
+                            <h:inputText id="horaFin" value="#{reservaBean.horaFin}" styleClass="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="estado">Estado</label>
+                            <h:selectOneMenu id="estado" value="#{reservaBean.estado}" styleClass="form-select">
+                                <f:selectItem itemLabel="DISPONIBLE" itemValue="DISPONIBLE" />
+                                <f:selectItem itemLabel="NO DISPONIBLE" itemValue="NO DISPONIBLE" />
+                            </h:selectOneMenu>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lugarId">Lugar</label>
+                            <h:selectOneMenu id="lugarId" value="#{reservaBean.lugarId}" styleClass="form-select">
+                                <f:selectItems value="#{reservaBean.listaLugares}" var="lugar"
+                                               itemLabel="#{lugar.nombre}" itemValue="#{lugar.id}" />
+                            </h:selectOneMenu>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <h:commandButton value="Guardar" action="#{reservaBean.guardar}" styleClass="btn btn-primary" />
+                    </div>
+                </h:form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+</h:body>
+</html>

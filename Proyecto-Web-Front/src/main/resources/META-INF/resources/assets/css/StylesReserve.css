@@ -1,0 +1,23 @@
+.containerButton{
+        display: flex;
+        justify-content: end;
+        margin: 30px;
+}
+.ContainerTable{
+    padding: 30px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    margin:25px;
+}
+table.table td {
+    background-color: white !important;
+}
+.ContainerSecTittle{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+}
+.btn{
+width:15%;
+}
