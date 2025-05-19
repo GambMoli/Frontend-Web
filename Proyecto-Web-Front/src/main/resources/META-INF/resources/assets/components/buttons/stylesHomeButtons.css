@@ -1,0 +1,41 @@
+/* Estilos personalizados para botones */
+.custom-btn {
+    width: 30%;
+    min-height: 8vh;
+    border: 2px solid #28537E !important;
+    border-radius: 10px !important;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #28537E !important;
+    transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+    background-color: #28537E !important;
+    color: white !important;
+}
+
+.custom-btn i {
+    font-size: 1.2rem;
+}
+
+/* Contenedor principal */
+.ContainerHome {
+    background-color: #fff;
+    width: 50%;
+    padding: 2rem;
+    margin-left: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    min-height: 70vh;
+}
+
+/* Contenedor de botones */
+.ContenedorBotones {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

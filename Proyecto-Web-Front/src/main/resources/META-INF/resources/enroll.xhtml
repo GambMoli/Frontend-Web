@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Matricula de materias</title>
+
+    <!-- Bootstrap y Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Estilos personalizados -->
+    <h:outputStylesheet name="css/stylesEnroll.css" library="assets" />
+</h:head>
+
+<h:body>
+
+    <!-- Header global -->
+    <ui:include src="/assets/components/header/header.xhtml" />
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="m-0">Matrícula académica</h3>
+            </div>
+
+            <div class="card-body">
+                <!-- Información de matricula -->
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-primary">
+                        <tr>
+                            <th>Sem</th>
+                            <th>Tipo matrícula</th>
+                            <th>Cred. semestre</th>
+                            <th>Cred. extra</th>
+                            <th>Cred. Matriculados</th>
+                            <th>Cred. Disponibles</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>6</td>
+                            <td>Completa</td>
+                            <td>16</td>
+                            <td>2</td>
+                            <td>18</td>
+                            <td>0</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección de materias matriculadas -->
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="m-0">Materias matriculadas</h5>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="accordion" id="materiasMatriculadas">
+                                <!-- Materia 1 -->
+                                <div class="accordion-item mb-2">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#materia1">
+                                            <div class="d-flex justify-content-between w-100">
+                                                <span><strong>26499-A2</strong> ARQUITECTURA DE COMPUTADORES</span>
+                                                <span class="text-muted">cred: 3 | sem: 5</span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="materia1" class="accordion-collapse collapse show">
+                                        <div class="accordion-body">
+                                            <p>Jueves, 06:00am a 07:40am<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+
+                                            <p>Lunes, 06:00am a 07:40am<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Materia 2 -->
+                                <div class="accordion-item mb-2">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#materia2">
+                                            <div class="d-flex justify-content-between w-100">
+                                                <span><strong>13702-P</strong> GESTION DE RECURSOS HUMANOS Y COMUNICACION</span>
+                                                <span class="text-muted">cred: 3 | sem: 7</span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="materia2" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <p>Viernes, 07:40am a 09:20am<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+
+                                            <p>Martes, 09:20am a 11:00am<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Materia 3 -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#materia3">
+                                            <div class="d-flex justify-content-between w-100">
+                                                <span><strong>13701-P</strong> PROGRAMACION WEB</span>
+                                                <span class="text-muted">cred: 3 | sem: 7</span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="materia3" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <p>Lunes, 08:35pm a 10:05pm<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+
+                                            <p>Martes, 06:20pm a 08:35pm<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección para matricular nuevas materias -->
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="m-0">Materias por matricular</h5>
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Pestañas de categorías -->
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="plan-tab" data-bs-toggle="tab" data-bs-target="#plan" type="button" role="tab">Plan de Estudio</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="electivas-tab" data-bs-toggle="tab" data-bs-target="#electivas" type="button" role="tab">Electivas</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="informatica-tab" data-bs-toggle="tab" data-bs-target="#informatica" type="button" role="tab">Informática</button>
+                                </li>
+                            </ul>
+
+                            <!-- Buscador de materias -->
+                            <div class="input-group mt-3 mb-3">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <h:inputText placeholder="Filtrar por código o nombre" styleClass="form-control" />
+                            </div>
+
+                            <!-- Contenido de las pestañas -->
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="plan" role="tabpanel">
+                                    <div class="list-group">
+                                        <!-- Materia para matricular 1 -->
+                                        <div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1"><strong>13801-A</strong> SISTEMAS OPERATIVOS</h5>
+                                                <small class="text-muted">cred: 3 | sem: 8</small>
+                                            </div>
+                                            <p class="mb-1">Lunes, 07:50pm a 09:20pm<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                            <p class="mb-1">Miércoles, 06:20pm a 07:50pm<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                            <div class="d-flex justify-content-end">
+                                                <h:form>
+                                                    <h:commandButton value="Matricular" styleClass="btn btn-sm btn-success" />
+                                                </h:form>
+                                            </div>
+                                        </div>
+
+                                        <!-- Materia para matricular 2 -->
+                                        <div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1"><strong>13802-P</strong> GESTION DE LA CALIDAD DEL PROYECTO</h5>
+                                                <small class="text-muted">cred: 3 | sem: 8</small>
+                                            </div>
+                                            <p class="mb-1">Jueves, 05:40pm a 07:05pm<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                            <p class="mb-1">Martes, 07:05pm a 08:35pm<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                            <div class="d-flex justify-content-end">
+                                                <h:form>
+                                                    <h:commandButton value="Matricular" styleClass="btn btn-sm btn-success" />
+                                                </h:form>
+                                            </div>
+                                        </div>
+
+                                        <!-- Materia para matricular 3 -->
+                                        <div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1"><strong>13804-P</strong> MODELOS MATEMATICOS</h5>
+                                                <small class="text-muted">cred: 3 | sem: 8</small>
+                                            </div>
+                                            <p class="mb-1">Jueves, 02:20pm a 04:00pm<br/>
+                                                <span class="text-muted">Fecha: 2025-02-03 a 2025-06-01</span></p>
+                                            <div class="d-flex justify-content-end">
+                                                <h:form>
+                                                    <h:commandButton value="Matricular" styleClass="btn btn-sm btn-success" />
+                                                </h:form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="electivas" role="tabpanel">
+                                    <!-- Contenido para electivas -->
+                                    <div class="alert alert-info mt-3">
+                                        <i class="fas fa-info-circle me-2"></i>Seleccione materias electivas disponibles para su programa académico.
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="informatica" role="tabpanel">
+                                    <!-- Contenido para informática -->
+                                    <div class="alert alert-info mt-3">
+                                        <i class="fas fa-info-circle me-2"></i>Seleccione cursos de informática disponibles.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Modal de confirmación -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmar matrícula</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro que desea matricular la materia <strong id="materiaNombre">[Nombre de la materia]</strong>?</p>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Una vez matriculada, no podrá cancelar esta acción.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <h:commandButton value="Confirmar" styleClass="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,162 @@
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.plan-container {
+    max-width: 1200px;
+    margin-bottom: 3rem;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: none;
+}
+
+.card-header {
+    background-color: #6a1b9a;
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem;
+    border-radius: 10px 10px 0 0 !important;
+}
+
+.card-header h3 {
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Información del pénsum */
+.pensum-info {
+    border-left: 4px solid #6a1b9a;
+}
+
+.pensum-info h5 {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/* Barra de progreso */
+.progress {
+    height: 1.5rem;
+    border-radius: 8px;
+}
+
+.progress-bar {
+    font-weight: 500;
+}
+
+/* Acordeón */
+.accordion-item {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+.accordion-button {
+    font-weight: 500;
+    background-color: #f8f9fa;
+    padding: 1.25rem 1.5rem;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f1f3f5;
+    color: #2c3e50;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+
+.accordion-body {
+    padding: 0;
+}
+
+/* Tabla */
+.table {
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    padding: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(106, 27, 154, 0.05);
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-primary {
+    background-color: #e9ecef;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+    border-radius: 50px;
+    font-size: 0.8rem;
+}
+
+.bg-success {
+    background-color: #2e7d32 !important;
+}
+
+.bg-warning {
+    background-color: #ff8f00 !important;
+}
+
+.bg-info {
+    background-color: #0288d1 !important;
+}
+
+.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+.bg-primary {
+    background-color: #6a1b9a !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-header {
+        padding: 1rem;
+    }
+
+    .pensum-info .row > div {
+        margin-bottom: 1rem;
+    }
+
+    .accordion-button {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .table th, .table td {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+    }
+}

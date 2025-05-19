@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Plan de Estudio</title>
+
+    <!-- Bootstrap y Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Estilos personalizados -->
+    <h:outputStylesheet name="css/stylesPlan.css" library="assets" />
+</h:head>
+
+<h:body>
+
+    <!-- Header global -->
+    <ui:include src="/assets/components/header/header.xhtml" />
+
+    <div class="container mt-4 plan-container">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="m-0"><i class="fas fa-book-open me-2"></i>Plan de Estudio</h3>
+            </div>
+
+            <div class="card-body">
+                <!-- Información del pénsum -->
+                <div class="pensum-info mb-4 p-3 bg-light rounded">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="mb-1">Pénsum:</h5>
+                            <p class="mb-0">INGENIERÍA DE SISTEMAS - 4 SEMESTRE <span class="badge bg-primary">ACTUAL</span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="mb-1">Programa:</h5>
+                            <p class="mb-0">INGENIERIA DE SISTEMAS</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="mb-1">Semestres:</h5>
+                            <p class="mb-0">10</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen de créditos -->
+                <div class="credits-summary mb-4">
+                    <h4 class="mb-3">Resumen de Créditos</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-primary">
+                            <tr>
+                                <th>Créditos Aprobados</th>
+                                <th>Créditos Pendientes</th>
+                                <th>Créditos Totales</th>
+                                <th>Progreso</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>96</td>
+                                <td>64</td>
+                                <td>160</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Acordeón de semestres -->
+                <div class="accordion" id="semestersAccordion">
+                    <!-- Semestre 1 -->
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#semester1">
+                                <strong>Semestre 1</strong>
+                            </button>
+                        </h2>
+                        <div id="semester1" class="accordion-collapse collapse show" data-bs-parent="#semestersAccordion">
+                            <div class="accordion-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Asignatura</th>
+                                            <th>Créditos</th>
+                                            <th>Requisitos</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>MAT-101</td>
+                                            <td>MATEMÁTICAS I</td>
+                                            <td>4</td>
+                                            <td class="text-muted">Ninguno</td>
+                                            <td><span class="badge bg-success">Aprobada</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>PRO-101</td>
+                                            <td>INTRODUCCIÓN A LA PROGRAMACIÓN</td>
+                                            <td>3</td>
+                                            <td class="text-muted">Ninguno</td>
+                                            <td><span class="badge bg-success">Aprobada</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Semestre 2 -->
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#semester2">
+                                <strong>Semestre 2</strong>
+                            </button>
+                        </h2>
+                        <div id="semester2" class="accordion-collapse collapse" data-bs-parent="#semestersAccordion">
+                            <div class="accordion-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Asignatura</th>
+                                            <th>Créditos</th>
+                                            <th>Requisitos</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>MAT-102</td>
+                                            <td>MATEMÁTICAS II</td>
+                                            <td>4</td>
+                                            <td>MAT-101 (Matemáticas I)</td>
+                                            <td><span class="badge bg-success">Aprobada</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>PRO-102</td>
+                                            <td>ESTRUCTURAS DE DATOS</td>
+                                            <td>3</td>
+                                            <td>PRO-101 (Introducción a la Programación)</td>
+                                            <td><span class="badge bg-success">Aprobada</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Semestre 3 -->
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#semester3">
+                                <strong>Semestre 3</strong>
+                            </button>
+                        </h2>
+                        <div id="semester3" class="accordion-collapse collapse" data-bs-parent="#semestersAccordion">
+                            <div class="accordion-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Asignatura</th>
+                                            <th>Créditos</th>
+                                            <th>Requisitos</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>MAT-201</td>
+                                            <td>CÁLCULO DIFERENCIAL</td>
+                                            <td>4</td>
+                                            <td>MAT-102 (Matemáticas II)</td>
+                                            <td><span class="badge bg-warning text-dark">Cursando</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BD-201</td>
+                                            <td>BASES DE DATOS</td>
+                                            <td>3</td>
+                                            <td>PRO-102 (Estructuras de Datos)</td>
+                                            <td><span class="badge bg-info">Pendiente</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Semestre 4 -->
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#semester4">
+                                <strong>Semestre 4</strong>
+                            </button>
+                        </h2>
+                        <div id="semester4" class="accordion-collapse collapse" data-bs-parent="#semestersAccordion">
+                            <div class="accordion-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Asignatura</th>
+                                            <th>Créditos</th>
+                                            <th>Requisitos</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>MAT-202</td>
+                                            <td>CÁLCULO INTEGRAL</td>
+                                            <td>4</td>
+                                            <td>MAT-201 (Cálculo Diferencial)</td>
+                                            <td><span class="badge bg-secondary">No cursada</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BD-202</td>
+                                            <td>DISEÑO DE BASES DE DATOS</td>
+                                            <td>3</td>
+                                            <td>BD-201 (Bases de Datos)</td>
+                                            <td><span class="badge bg-secondary">No cursada</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</h:body>
+</html>
