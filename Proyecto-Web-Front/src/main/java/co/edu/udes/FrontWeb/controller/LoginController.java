@@ -1,90 +1,65 @@
 package co.edu.udes.FrontWeb.controller;
 
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import co.edu.udes.FrontWeb.service.HttpClientService;
+import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.URI;
-import java.time.Duration;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 @Named("loginController")
 @SessionScoped
+@Data
 public class LoginController implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    private static final String API_URL = "http://localhost:8080/api/auth/login";
+
+    @Inject
+    private HttpClientService httpClientService;
+
+    private Integer id;
     private String email;
     private String password;
-    private String token;
     private String name;
     private String role;
 
-    private static final String API_URL = "http://localhost:8080/api/auth/login";
-
-    // Getters y setters
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-    public String getToken() { return token; }
-    public String getName() { return name; }
-    public String getRole() { return role; }
-
     public String login() {
         try {
-            System.out.println("Entro al login");
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(10))
-                    .build();
+            Map<String, String> requestBody = Map.of(
+                    "email", email,
+                    "password", password
+            );
+            System.out.println("Attempting login to: " + API_URL);
+            System.out.println("With email: " + email);
 
-            String jsonBody = String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);
+            Map<String, Object> response = (Map<String, Object>) httpClientService.post(API_URL, requestBody, false);
+            System.out.println("Response received: " + response);
+            this.name = (String) response.get("name");
+            Map<String,Object> roleMap = (Map<String,Object>) response.get("role");
+            this.role = roleMap != null ? (String) roleMap.get("name") : null;
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL))
-                    .timeout(Duration.ofSeconds(10))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                    .build();
+            String token = (String) response.get("token");
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response);
-            if (response.statusCode() == 200) {
-                ObjectMapper mapper = new ObjectMapper();
-                Map<String,Object> result = mapper.readValue(response.body(), Map.class);
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.getExternalContext().getSessionMap().put("authToken", token);
+            context.getExternalContext().getSessionMap().put("userName", this.name);
+            context.getExternalContext().getSessionMap().put("userRole", this.role);
+            setId((Integer) response.get("id"));
 
-                this.token = (String) result.get("token");
-                this.name = (String) result.get("name");
-                Map<String,Object> roleMap = (Map<String,Object>) result.get("role");
-                this.role = roleMap != null ? (String) roleMap.get("name") : null;
-
-                System.out.println(token + "token");
-                System.out.println(name + "name");
-
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("authToken", this.token);
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("userName", this.name);
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("userRole", this.role);
-
-                return "hola?faces-redirect=true";
-
-            } else {
-                FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Credenciales incorrectas o error del sistema", null));
-                context.validationFailed();
-                return null;
-            }
+            return "home?faces-redirect=true";
 
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error de conexión con el servidor", null));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Error en el login: " + e.getMessage(), null));
             context.validationFailed();
             return null;
         }
