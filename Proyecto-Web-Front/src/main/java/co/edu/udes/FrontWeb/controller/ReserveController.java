@@ -331,7 +331,7 @@ public class ReserveController implements Serializable {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("EL ID ENVIADO FUE:" + idReservaSeleccionada);
+
 
             if (response.statusCode() == 200 || response.statusCode() == 204) {
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
