@@ -28,7 +28,7 @@
                         <a href="#" class="nav-icon me-3"><i class="fas fa-bell"></i></a>
                         <div class="dropdown">
                             <a class="dropdown-toggle nav-link user-dropdown" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> LUIS ALEJANDRO VERGEL IRLET
+                                <i class="fas fa-user-circle"></i> #{facesContext.externalContext.sessionMap.userName}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="#{request.contextPath}/profile.xhtml">Perfil</a></li>
