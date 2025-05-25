@@ -4,6 +4,13 @@
         width: 50%;
         margin-left: 40px;
 }
+body {
+    background-color: #f8f9fa !important;
+
+}
+.container{
+gap:30px;
+}
 
 /* Tabla */
 .table-container {
@@ -45,4 +52,11 @@
 
 .info-row {
     display: flex !important;
+}
+
+.academic-info{
+    background-color: white;
+    padding: 20px;
+    height: max-content;
+    border-radius: 15px;
 }

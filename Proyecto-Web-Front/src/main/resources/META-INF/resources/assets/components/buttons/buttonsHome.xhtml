@@ -14,46 +14,59 @@
     <!-- Bootstrap Bundle JS -->
     <h:outputScript library="webjars" name="bootstrap/5.3.3/js/bootstrap.bundle.min.js" />
 
-    <!-- Buttons -->
+    <!-- Contenedor principal con tu estilo de fondo -->
     <div class="ContainerHome">
-        <div class="ContenedorBotones d-flex flex-column gap-4">
-            <div class="d-flex justify-content-between gap-3">
-                <h:link outcome="/home" styleClass="btn btn-outline-primary custom-btn">
-                    <div>
-                        <span><i class="fa-brands fa-rocketchat me-2"></i></span>
-                    </div>
-                    Mensajería
-                </h:link>
+        <div class="ContenedorBotones container">
+            <div class="row g-4 r">
 
-                <h:link outcome="/home" styleClass="btn btn-outline-primary custom-btn">
-                    <div>
-                        <span><i class="fa-solid fa-briefcase me-2"></i></span>
-                    </div>
-                    Matrícula
-                </h:link>
+                <div class="col-md-4 col-sm-6">
+                    <h:link outcome="/loan_library" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                        <i class="fa-brands fa-rocketchat me-2"></i>
+                        Reserva Libros
+                    </h:link>
+                </div>
 
-                <h:link outcome="/home" styleClass="btn btn-outline-primary custom-btn">
-                    <div>
-                        <span><i class="fa-solid fa-pen-to-square me-2"></i></span>
-                    </div>
-                    Notas
-                </h:link>
-            </div>
+                <div class="col-md-4 col-sm-6">
+                    <h:link outcome="/ReservePage" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-briefcase me-2"></i>
+                        Reserva Espacios
+                    </h:link>
+                </div>
 
-            <div class="d-flex justify-content-start gap-3">
-                <h:link outcome="/home" styleClass="btn btn-outline-primary custom-btn">
-                    <div>
-                        <span><i class="fa-solid fa-calendar-days me-2"></i></span>
-                    </div>
-                    Horario
-                </h:link>
+                <div class="col-md-4 col-sm-6">
+                    <h:link outcome="/academic_plan" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-pen-to-square me-2"></i>
+                        Plan Académico
+                    </h:link>
+                </div>
 
-                <h:link outcome="/home" styleClass="btn btn-outline-primary custom-btn">
-                    <div>
-                        <span><i class="fa-solid fa-user me-2"></i></span>
-                    </div>
-                    Usuarios
-                </h:link>
+                <div class="col-md-4 col-sm-6">
+                    <h:link outcome="/home" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-calendar-days me-2"></i>
+                        Horario
+                    </h:link>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <h:link outcome="/home" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-user me-2"></i>
+                        Usuarios
+                    </h:link>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <h:link outcome="/enroll" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-pen-to-square me-2"></i>
+                        Matrícula
+                    </h:link>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <h:link outcome="/notes_record" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-pen-to-square me-2"></i>
+                        Record de Notas
+                    </h:link>
+                </div>
             </div>
         </div>
     </div>
