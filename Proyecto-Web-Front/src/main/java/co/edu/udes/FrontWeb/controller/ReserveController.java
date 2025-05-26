@@ -2,12 +2,16 @@ package co.edu.udes.FrontWeb.controller;
 
 import co.edu.udes.FrontWeb.model.Place;
 import co.edu.udes.FrontWeb.model.Reserve;
+import co.edu.udes.FrontWeb.model.Student;
+import co.edu.udes.FrontWeb.model.Teacher;
+import co.edu.udes.FrontWeb.service.HttpClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -17,6 +21,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +30,9 @@ import java.util.UUID;
 @Named("reserveController")
 @SessionScoped
 public class ReserveController implements Serializable {
+
+    @Inject
+    private HttpClientService httpClientService;
 
     private String reserveDate;
     private String hourInit;
@@ -39,7 +48,7 @@ public class ReserveController implements Serializable {
 
     private List<Place> listaLugares = new ArrayList<>();
     private List<Reserve> listaReservas= new ArrayList<>();
-    private static final String API_URL = "http://localhost:8081/api/reserve";
+    private static final String API_URL = "http://localhost:8080/api/reserve";
 
     // GETTERS & SETTERS
     public Long getIdReservaSeleccionada() {
@@ -135,25 +144,12 @@ public class ReserveController implements Serializable {
         listarReservas();
 
     }
-    public void listarReservas(){
+    public void listarReservas() {
         FacesContext context = FacesContext.getCurrentInstance();
-        try{
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/reserve"))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JavaTimeModule());
-                listaReservas = mapper.readValue(response.body(), new TypeReference<List<Reserve>>() {});
-            }
+        try {
+            listaReservas = (List<Reserve>) httpClientService.get(API_URL, false);
             context.getExternalContext().getSessionMap().put("listaReservas", listaReservas);
-
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error de conexión con el servidor.", null));
@@ -175,72 +171,37 @@ public class ReserveController implements Serializable {
         }
 
         try {
-            String code = "RES" + String.format("%04d", (int)(Math.random() * 10000)); // Código automático
-            String state = "ACTIVO"; // Estado fijo
+            Reserve nuevaReserva = new Reserve();
+            nuevaReserva.setCode("RES" + String.format("%04d", (int)(Math.random() * 10000)));
+            nuevaReserva.setReserveDate(LocalDate.parse(reserveDate));
+            nuevaReserva.setHourInit(LocalTime.parse(hourInit));
+            nuevaReserva.setHourFinish(LocalTime.parse(hourFinish));
+            nuevaReserva.setState("ACTIVO");
 
-            String jsonBody;
-
+            Place lugar = new Place();
+            lugar.setId(placeId);
+            nuevaReserva.setPlace(lugar);
 
             if ("student".equals(userType)) {
-                System.out.println("Place ID antes de enviar: " + placeId);
-
-                jsonBody = String.format("""
-                    {
-                        "code": "%s",
-                        "reserveDate": "%s",
-                        "hourInit": "%s",
-                        "hourFinish": "%s",
-                        "state": "%s",
-                        "placeId": { "id": %d },
-                        "studentId": %d 
-                    }
-                    """, code, reserveDate, hourInit, hourFinish, state, placeId, studentId);
+                Student estudiante = new Student();
+                estudiante.setId(studentId);
+                nuevaReserva.setStudent(estudiante);
             } else {
-                System.out.println("Place ID antes de enviar: " + placeId);
-
-                jsonBody = String.format("""
-                    {
-                        "code": "%s",
-                        "reserveDate": "%s",
-                        "hourInit": "%s",
-                        "hourFinish": "%s",
-                        "state": "%s",
-                        "placeId": { "id": %d },
-                        "teacherId": %d}
-                    }
-                    """, code, reserveDate, hourInit, hourFinish, state, placeId, teacherId);
+                Teacher profesor = new Teacher();
+                profesor.setId(teacherId);
+                nuevaReserva.setTeacher(profesor);
             }
 
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(10))
-                    .build();
+            httpClientService.post(API_URL, nuevaReserva, false);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL))
-                    .timeout(Duration.ofSeconds(10))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            System.out.println("Respuesta del servidor: " + response.body()); // Debug
-
-            if (response.statusCode() == 200 || response.statusCode() == 201) {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Reserva guardada correctamente.", null));
-                listarReservas();
-                limpiarFormulario();
-                System.out.println("Reserva enviada con placeId: " + placeId);
-            } else {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error al guardar la reserva. Código: " + response.statusCode(), null));
-            }
-
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Reserva guardada correctamente.", null));
+            listarReservas();
+            limpiarFormulario();
         } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error de conexión con el servidor.", null));
+                    "Error al guardar la reserva.", null));
         }
     }
 
@@ -262,7 +223,7 @@ public class ReserveController implements Serializable {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/place"))
+                    .uri(URI.create("http://localhost:8080/api/place"))
                     .GET()
                     .build();
 
@@ -276,104 +237,75 @@ public class ReserveController implements Serializable {
             e.printStackTrace();
         }
     }
-    public void cargarReserva() {
-        if (idReservaSeleccionada == null) return;
 
+    public void UploadReserve(Long id) {
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/reserve/" + idReservaSeleccionada))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JavaTimeModule());
-                Reserve reserva = mapper.readValue(response.body(), Reserve.class);
-
-                this.reserveDate = reserva.getReserveDate().toString();
-                this.hourInit = reserva.getHourInit().toString();
-                this.hourFinish = reserva.getHourFinish().toString();
-            }
+            Reserve reserva = (Reserve) httpClientService.get(API_URL + "/" + id, false);
+            this.idReservaSeleccionada = reserva.getId();
+            this.reserveDate = reserva.getReserveDate().toString();
+            this.hourInit = reserva.getHourInit().toString();
+            this.hourFinish = reserva.getHourFinish().toString();
         } catch (Exception e) {
             e.printStackTrace();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al cargar la reserva.", null));
         }
     }
-    public void actualizarReserva() {
+    public void prepareUpdate(Long id) {
+        UploadReserve(id); // carga los datos en el formulario
+    }
+    public void UpdateReserve(Long id) {
         FacesContext context = FacesContext.getCurrentInstance();
-
         if (idReservaSeleccionada == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error: No se ha seleccionado ninguna reserva para actualizar.", null));
+                    "No se ha seleccionado ninguna reserva para actualizar.", null));
             return;
         }
 
         try {
-            String jsonBody = String.format("""
-        {
-            "reserveDate": "%s",
-            "hourInit": "%s",
-            "hourFinish": "%s"
-        }
-        """, reserveDate, hourInit, hourFinish);
+            Reserve reservaActualizada = new Reserve();
+            reservaActualizada.setReserveDate(LocalDate.parse(reserveDate));
+            reservaActualizada.setHourInit(LocalTime.parse(hourInit));
+            reservaActualizada.setHourFinish(LocalTime.parse(hourFinish));
 
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(10))
-                    .build();
+            httpClientService.put(API_URL + "/" + idReservaSeleccionada, reservaActualizada, false);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/reserve/" + idReservaSeleccionada))
-                    .timeout(Duration.ofSeconds(10))
-                    .header("Content-Type", "application/json")
-                    .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-
-            if (response.statusCode() == 200 || response.statusCode() == 204) {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Reserva actualizada correctamente.", null));
-                listarReservas(); // Refrescar la lista
-                limpiarFormulario();
-            } else {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error al actualizar la reserva. Código: " + response.statusCode(), null));
-            }
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Reserva actualizada correctamente.", null));
+            listarReservas();
+            limpiarFormulario();
         } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error de conexión con el servidor.", null));
+                    "Error al actualizar la reserva.", null));
         }
     }
 
-    public void eliminarReserva(Long id) {
+    public String updateReserve(){
+        System.out.println("✅ ID recibido directamente: " + idReservaSeleccionada);
+        UpdateReserve(idReservaSeleccionada);
+        return null;
+    }
+
+
+    public void DeleteReserve(Long id) {
         FacesContext context = FacesContext.getCurrentInstance();
-
         try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8081/api/reserve/" + id))
-                    .DELETE()
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200 || response.statusCode() == 204) {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Reserva eliminada correctamente.", null));
-                listarReservas();  // Actualizar la lista después de eliminar
-            } else {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error al eliminar la reserva. Código: " + response.statusCode(), null));
-            }
+            httpClientService.delete(API_URL + "/" + id, false);
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Reserva eliminada correctamente.", null));
+            listarReservas();
         } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error de conexión con el servidor.", null));
+                    "Error al eliminar la reserva.", null));
         }
+    }
+    public String deleteReserveConParametro(Long id) {
+        System.out.println("✅ ID recibido directamente: " + id);
+        DeleteReserve(id);
+        return null;
     }
 
 }

@@ -25,7 +25,7 @@ public class LoginController implements Serializable {
     private String name;
     private String role;
 
-    private static final String API_URL = "http://localhost:8081/api/auth/login";
+    private static final String API_URL = "http://localhost:8080/api/auth/login";
 
     // Getters y setters
     public String getEmail() { return email; }

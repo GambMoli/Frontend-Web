@@ -12,12 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Reserve {
-    private long id;
+    private Long id;
     private String code;
     private LocalDate reserveDate;
     private LocalTime hourInit;
     private LocalTime hourFinish;
     private String state;
     private Place place;
+    private Student student;
+    private Teacher teacher;
 
 }
