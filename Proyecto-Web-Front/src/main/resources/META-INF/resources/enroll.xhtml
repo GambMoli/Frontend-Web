@@ -19,15 +19,6 @@
 <h:body>
     <ui:include src="/assets/components/header/header.xhtml" />
 
-    <!-- Contenedor principal de mensajes -->
-    <div class="container mt-3">
-        <h:messages id="globalMessages" globalOnly="true"
-                    styleClass="messages"
-                    errorClass="alert alert-danger"
-                    infoClass="alert alert-success"
-                    warnClass="alert alert-warning" />
-    </div>
-
     <div class="container mt-4">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -42,15 +33,15 @@
                         <thead class="table-primary">
                         <tr>
                             <th>Estudiante</th>
-                            <th>Cred. Matriculados</th>
-                            <th>Cred. Disponibles</th>
+                            <th>Carrera</th>
+                            <th>Semestre Actual</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td>#{enrollmentController.studentName}</td>
-                            <td>#{enrollmentController.enrolledCredits}</td>
-                            <td>#{18 - enrollmentController.enrolledCredits}</td>
+                            <td>#{enrollmentController.careerName}</td>
+                            <td>#{enrollmentController.currentSemester}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -61,15 +52,6 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="m-0">Materias matriculadas</h5>
-                            <h:form id="refreshForm">
-                                <h:commandButton value="Actualizar"
-                                                 styleClass="btn btn-sm btn-outline-primary"
-                                                 action="#{enrollmentController.refreshData()}"
-                                                 immediate="true">
-                                    <f:ajax execute="@form"
-                                            render="enrolledClassesPanel availableSubjectsPanel globalMessages" />
-                                </h:commandButton>
-                            </h:form>
                         </div>
                         <div class="card-body">
                             <h:panelGroup id="enrolledClassesPanel">
@@ -84,19 +66,7 @@
                                                 </h6>
                                                 <div>
                                                     <span class="badge bg-primary me-2">Grupo #{clazz['groupCode']}</span>
-                                                    <span class="badge bg-info">#{clazz['credits']} créditos</span>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <h:form>
-                                                    <h:commandButton value="Cancelar"
-                                                                     styleClass="btn btn-sm btn-outline-danger"
-                                                                     action="#{enrollmentController.cancelEnrollment(clazz['groupId'])}"
-                                                                     onclick="return confirm('¿Está seguro de cancelar esta materia?');">
-                                                        <f:ajax execute="@form"
-                                                                render="enrolledClassesPanel availableSubjectsPanel globalMessages" />
-                                                    </h:commandButton>
-                                                </h:form>
                                             </div>
                                         </div>
                                     </ui:repeat>
@@ -155,11 +125,8 @@
                                                         </small>
                                                     </div>
                                                     <div>
-                                                        <span class="badge #{enrollmentController.isSubjectEnrolled(subject['id']) ? 'bg-light text-success' : 'bg-info'} fs-6">
-                                                            #{subject['credits']} créditos
-                                                        </span>
                                                         <ui:fragment rendered="#{enrollmentController.isSubjectEnrolled(subject['id'])}">
-                                                            <span class="badge bg-warning text-dark ms-2">MATRICULADA</span>
+                                                            <span class="badge bg-warning text-dark">MATRICULADA</span>
                                                         </ui:fragment>
                                                     </div>
                                                 </div>
@@ -219,7 +186,7 @@
                                                                                                  disabled="#{group['availableSlots'] le 0}"
                                                                                                  onclick="return confirm('¿Desea matricular este grupo?');">
                                                                                     <f:ajax execute="@form"
-                                                                                            render="enrolledClassesPanel availableSubjectsPanel globalMessages" />
+                                                                                            render="enrolledClassesPanel availableSubjectsPanel" />
                                                                                 </h:commandButton>
                                                                             </h:form>
                                                                         </ui:fragment>
@@ -231,7 +198,7 @@
                                                                                                  action="#{enrollmentController.cancelEnrollment(group['id'])}"
                                                                                                  onclick="return confirm('¿Está seguro de cancelar este grupo?');">
                                                                                     <f:ajax execute="@form"
-                                                                                            render="enrolledClassesPanel availableSubjectsPanel globalMessages" />
+                                                                                            render="enrolledClassesPanel availableSubjectsPanel" />
                                                                                 </h:commandButton>
                                                                             </h:form>
                                                                         </ui:fragment>

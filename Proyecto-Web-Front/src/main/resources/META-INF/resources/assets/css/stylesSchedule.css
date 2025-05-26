@@ -1,0 +1,276 @@
+/* Estilos para el horario académico tipo tabla */
+.schedule-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Contenedor de la tabla de horarios */
+.schedule-table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla principal */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.9rem;
+}
+
+/* Encabezados de la tabla */
+.schedule-table thead th {
+    background: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-align: center;
+    padding: 15px 8px;
+    border: 1px solid #dee2e6;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Columna de hora más estrecha */
+.time-column {
+    width: 80px;
+    min-width: 80px;
+}
+
+/* Celdas de hora */
+.time-cell {
+    background: #f8f9fa;
+    color: #6c757d;
+    font-weight: 600;
+    text-align: center;
+    padding: 15px 8px;
+    border: 1px solid #dee2e6;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* Celdas de días */
+.day-cell {
+    border: 1px solid #dee2e6;
+    padding: 4px;
+    vertical-align: top;
+    width: calc((100% - 80px) / 6);
+    min-height: 60px;
+    position: relative;
+}
+
+/* Bloques de clase */
+.class-block {
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: 2px 0;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    cursor: default !important;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.class-block:hover {
+    background-color: inherit;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Nombre de la materia */
+.class-name {
+    font-weight: 600;
+    color: #1976d2;
+    margin-bottom: 2px;
+    font-size: 0.82rem;
+}
+
+/* Hora de la clase */
+.class-time {
+    color: #666;
+    font-size: 0.75rem;
+    margin-bottom: 1px;
+}
+
+/* Aula */
+.class-room {
+    color: #666;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Filas alternadas */
+.schedule-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.schedule-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* Loading spinner */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Card enhancements */
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* Alert enhancements */
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .schedule-table {
+        font-size: 0.8rem;
+    }
+
+    .schedule-table thead th {
+        padding: 12px 6px;
+        font-size: 0.85rem;
+    }
+
+    .time-cell {
+        padding: 12px 6px;
+        font-size: 0.8rem;
+    }
+
+    .day-cell {
+        padding: 3px;
+        min-height: 50px;
+    }
+
+    .class-block {
+        padding: 4px 6px;
+        font-size: 0.75rem;
+    }
+
+    .class-name {
+        font-size: 0.78rem;
+    }
+
+    .class-time,
+    .class-room {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .schedule-container {
+        padding: 0 10px;
+    }
+
+    .time-column {
+        width: 60px;
+        min-width: 60px;
+    }
+
+    .schedule-table {
+        font-size: 0.75rem;
+    }
+
+    .schedule-table thead th {
+        padding: 10px 4px;
+        font-size: 0.8rem;
+    }
+
+    .time-cell {
+        padding: 10px 4px;
+        font-size: 0.75rem;
+    }
+
+    .day-cell {
+        padding: 2px;
+        min-height: 45px;
+    }
+
+    .class-block {
+        padding: 3px 4px;
+        font-size: 0.7rem;
+        margin: 1px 0;
+    }
+
+    .class-name {
+        font-size: 0.72rem;
+        margin-bottom: 1px;
+    }
+
+    .class-time,
+    .class-room {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .schedule-table-container {
+        margin: 10px -15px 0;
+        border-radius: 0;
+    }
+
+    .time-column {
+        width: 50px;
+        min-width: 50px;
+    }
+
+    .schedule-table thead th {
+        padding: 8px 2px;
+        font-size: 0.75rem;
+    }
+
+    .time-cell {
+        padding: 8px 2px;
+        font-size: 0.7rem;
+    }
+
+    .class-name {
+        font-size: 0.68rem;
+    }
+
+    .class-time,
+    .class-room {
+        font-size: 0.6rem;
+    }
+}
+
+/* Scrollbar personalizado para la tabla */
+.schedule-table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.schedule-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.schedule-table-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.schedule-table-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

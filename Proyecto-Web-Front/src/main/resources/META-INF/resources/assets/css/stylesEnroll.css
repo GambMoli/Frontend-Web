@@ -280,6 +280,17 @@ body {
     font-size: 0.875rem;
 }
 
+/* Remover bordes azules de las tarjetas de materias disponibles */
+.card.border-primary,
+.card.border-start {
+    border-left: none !important;
+    border-color: transparent !important;
+}
+
+.card:not(.border-success) {
+    border-left: none !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .card-header {
