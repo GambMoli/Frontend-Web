@@ -186,6 +186,7 @@ public class ReserveController implements Serializable {
                 Student estudiante = new Student();
                 estudiante.setId(studentId);
                 nuevaReserva.setStudent(estudiante);
+
             } else {
                 Teacher profesor = new Teacher();
                 profesor.setId(teacherId);
