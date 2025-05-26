@@ -3,8 +3,6 @@ package co.edu.udes.FrontWeb.controller;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import co.edu.udes.FrontWeb.service.HttpClientService;
 import lombok.Data;
 
@@ -30,9 +28,8 @@ public class EnrollmentController implements Serializable {
 
     // Student information
     private String studentName = "";
-    private String careerName = "Ingeniería de Sistemas";
-    private int currentSemester = 2024;
-    private int enrolledCredits = 0;
+    private String careerName = "";
+    private int currentSemester = 1;
 
     // Enrollment data
     private List<Map<String, Object>> enrolledClasses = new ArrayList<>();
@@ -40,25 +37,24 @@ public class EnrollmentController implements Serializable {
     private List<Map<String, Object>> filteredSubjects = new ArrayList<>();
     private String searchTerm = "";
 
+    // Career subjects for filtering
+    private List<Integer> careerSubjectIds = new ArrayList<>();
+
     public void init() {
         try {
-            // Limpiar mensajes anteriores
-            clearMessages();
-
             // Verificar autenticación
             if (loginController == null || loginController.getId() <= 0) {
-                showErrorMessage("Sesión no válida. Por favor, inicie sesión nuevamente.");
                 return;
             }
 
             loadStudentData();
+            loadCareerSubjects();
             loadEnrolledClasses();
             loadAvailableSubjects();
 
         } catch (Exception e) {
             System.err.println("Error en init(): " + e.getMessage());
             e.printStackTrace();
-            showErrorMessage("Error al inicializar la página. Por favor, recargue la página.");
         }
     }
 
@@ -66,75 +62,125 @@ public class EnrollmentController implements Serializable {
         try {
             String token = getAuthToken();
             if (token == null) {
-                showErrorMessage("Token de autenticación no encontrado");
                 return;
             }
 
             int studentId = loginController.getId();
-            String scheduleUrl = "http://localhost:8080/api/students/" + studentId + "/schedule";
+            String academicRecordUrl = "http://localhost:8080/api/students/" + studentId + "/academic-record";
 
-            Object response = httpClientService.get(scheduleUrl, true);
+            Object response = httpClientService.get(academicRecordUrl, true);
 
             if (response instanceof Map) {
-                Map<String, Object> scheduleResponse = (Map<String, Object>) response;
+                Map<String, Object> academicRecord = (Map<String, Object>) response;
 
-                Object studentNameObj = scheduleResponse.get("studentName");
+                Object studentNameObj = academicRecord.get("studentName");
                 if (studentNameObj != null) {
                     this.studentName = studentNameObj.toString();
                 } else {
                     this.studentName = "Estudiante";
                 }
 
-                this.careerName = "Ingeniería de Sistemas";
-                this.enrolledCredits = calculateEnrolledCredits();
+                Object careerNameObj = academicRecord.get("careerName");
+                if (careerNameObj != null) {
+                    this.careerName = careerNameObj.toString();
+                } else {
+                    this.careerName = "Carrera no definida";
+                }
+
+                Object currentSemesterObj = academicRecord.get("currentSemester");
+                if (currentSemesterObj != null) {
+                    try {
+                        if (currentSemesterObj instanceof Integer) {
+                            this.currentSemester = (Integer) currentSemesterObj;
+                        } else {
+                            this.currentSemester = Integer.parseInt(currentSemesterObj.toString());
+                        }
+                    } catch (NumberFormatException e) {
+                        this.currentSemester = 1;
+                    }
+                } else {
+                    this.currentSemester = 1;
+                }
             } else {
                 this.studentName = "Estudiante";
-                showWarningMessage("No se pudieron cargar todos los datos del estudiante");
+                this.careerName = "Carrera no definida";
+                this.currentSemester = 1;
             }
 
         } catch (Exception e) {
             System.err.println("Error en loadStudentData(): " + e.getMessage());
             e.printStackTrace();
             this.studentName = "Estudiante";
-            showErrorMessage("Error al cargar datos del estudiante");
+            this.careerName = "Carrera no definida";
+            this.currentSemester = 1;
+        }
+    }
+
+    private void loadCareerSubjects() {
+        try {
+            String token = getAuthToken();
+            if (token == null) {
+                careerSubjectIds.clear();
+                return;
+            }
+
+            String careersUrl = "http://localhost:8080/api/careers";
+            Object response = httpClientService.get(careersUrl, true);
+            careerSubjectIds.clear();
+
+            if (response instanceof List) {
+                List<Map<String, Object>> careers = (List<Map<String, Object>>) response;
+
+                for (Map<String, Object> career : careers) {
+                    Object careerNameObj = career.get("name");
+                    if (careerNameObj != null && careerNameObj.toString().equals(this.careerName)) {
+                        Object semestersObj = career.get("semesters");
+                        if (semestersObj instanceof List) {
+                            List<Map<String, Object>> semesters = (List<Map<String, Object>>) semestersObj;
+
+                            for (Map<String, Object> semester : semesters) {
+                                Object subjectsObj = semester.get("subjects");
+                                if (subjectsObj instanceof List) {
+                                    List<Map<String, Object>> subjects = (List<Map<String, Object>>) subjectsObj;
+
+                                    for (Map<String, Object> subject : subjects) {
+                                        Object subjectIdObj = subject.get("id");
+                                        if (subjectIdObj != null) {
+                                            try {
+                                                int subjectId;
+                                                if (subjectIdObj instanceof Integer) {
+                                                    subjectId = (Integer) subjectIdObj;
+                                                } else {
+                                                    subjectId = Integer.parseInt(subjectIdObj.toString());
+                                                }
+                                                careerSubjectIds.add(subjectId);
+                                            } catch (NumberFormatException e) {
+                                                // Ignorar IDs inválidos
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break; // Encontramos la carrera, salir del loop
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error en loadCareerSubjects(): " + e.getMessage());
+            e.printStackTrace();
+            careerSubjectIds.clear();
         }
     }
 
     private String getAuthToken() {
         try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (facesContext != null && facesContext.getExternalContext() != null) {
-                return (String) facesContext.getExternalContext()
-                        .getSessionMap().get("authToken");
-            }
-            return null;
+            // En este contexto no tenemos acceso a FacesContext, pero el token debería ser manejado por el HttpClientService
+            return "token"; // Placeholder - el HttpClientService debería manejar esto
         } catch (Exception e) {
             System.err.println("Error al obtener token: " + e.getMessage());
             return null;
-        }
-    }
-
-    private int calculateEnrolledCredits() {
-        try {
-            return enrolledClasses.stream()
-                    .mapToInt(clazz -> {
-                        Object credits = clazz.get("credits");
-                        if (credits == null) return 0;
-
-                        try {
-                            if (credits instanceof Integer) {
-                                return (Integer) credits;
-                            } else {
-                                return Integer.parseInt(credits.toString());
-                            }
-                        } catch (NumberFormatException e) {
-                            return 0;
-                        }
-                    })
-                    .sum();
-        } catch (Exception e) {
-            System.err.println("Error calculando créditos: " + e.getMessage());
-            return 0;
         }
     }
 
@@ -190,7 +236,6 @@ public class EnrollmentController implements Serializable {
                                         enrolledClass.put("subjectCode", "SUB" + (subjectId != null ? subjectId.toString() : "0"));
 
                                         enrolledClass.put("groupCode", "G" + groupId);
-                                        enrolledClass.put("credits", 3);
                                         uniqueClasses.put(groupId, enrolledClass);
                                     }
                                 }
@@ -202,14 +247,10 @@ public class EnrollmentController implements Serializable {
                 }
             }
 
-            enrolledCredits = calculateEnrolledCredits();
-
         } catch (Exception e) {
             System.err.println("Error en loadEnrolledClasses(): " + e.getMessage());
             e.printStackTrace();
             enrolledClasses.clear();
-            enrolledCredits = 0;
-            showErrorMessage("Error al cargar materias matriculadas");
         }
     }
 
@@ -247,6 +288,11 @@ public class EnrollmentController implements Serializable {
                                 }
                             }
 
+                            // Filtrar solo materias de la carrera del estudiante
+                            if (!careerSubjectIds.contains(subjectId)) {
+                                continue;
+                            }
+
                             String subjectName = subjectNameObj.toString();
 
                             if (!subjectsMap.containsKey(subjectId)) {
@@ -254,7 +300,6 @@ public class EnrollmentController implements Serializable {
                                 subject.put("id", subjectId);
                                 subject.put("name", subjectName);
                                 subject.put("code", "SUB" + subjectId);
-                                subject.put("credits", 3);
                                 subject.put("groups", new ArrayList<Map<String, Object>>());
                                 subjectsMap.put(subjectId, subject);
                             }
@@ -331,7 +376,6 @@ public class EnrollmentController implements Serializable {
             e.printStackTrace();
             allSubjects.clear();
             filteredSubjects.clear();
-            showErrorMessage("Error al cargar materias disponibles");
         }
     }
 
@@ -346,7 +390,57 @@ public class EnrollmentController implements Serializable {
                 subjectId = Integer.parseInt(subjectIdObj.toString());
             }
 
-            // Por simplicidad, devolvemos false - puedes implementar la lógica real aquí
+            // Verificar si algún grupo de esta materia está matriculado
+            for (Map<String, Object> enrolledClass : enrolledClasses) {
+                Object enrolledGroupIdObj = enrolledClass.get("groupId");
+                if (enrolledGroupIdObj == null) continue;
+
+                try {
+                    int enrolledGroupId;
+                    if (enrolledGroupIdObj instanceof Integer) {
+                        enrolledGroupId = (Integer) enrolledGroupIdObj;
+                    } else {
+                        enrolledGroupId = Integer.parseInt(enrolledGroupIdObj.toString());
+                    }
+
+                    // Buscar si este grupo pertenece a la materia
+                    for (Map<String, Object> subject : allSubjects) {
+                        Object subjectIdInList = subject.get("id");
+                        if (subjectIdInList != null) {
+                            int subjectIdInListInt;
+                            if (subjectIdInList instanceof Integer) {
+                                subjectIdInListInt = (Integer) subjectIdInList;
+                            } else {
+                                subjectIdInListInt = Integer.parseInt(subjectIdInList.toString());
+                            }
+
+                            if (subjectIdInListInt == subjectId) {
+                                Object groupsObj = subject.get("groups");
+                                if (groupsObj instanceof List) {
+                                    List<Map<String, Object>> groups = (List<Map<String, Object>>) groupsObj;
+                                    for (Map<String, Object> group : groups) {
+                                        Object groupIdObj = group.get("id");
+                                        if (groupIdObj != null) {
+                                            int groupId;
+                                            if (groupIdObj instanceof Integer) {
+                                                groupId = (Integer) groupIdObj;
+                                            } else {
+                                                groupId = Integer.parseInt(groupIdObj.toString());
+                                            }
+                                            if (groupId == enrolledGroupId) {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+            }
+
             return false;
         } catch (Exception e) {
             return false;
@@ -413,7 +507,6 @@ public class EnrollmentController implements Serializable {
     public String enrollGroup(Object groupIdObj) {
         try {
             if (groupIdObj == null) {
-                showErrorMessage("ID de grupo inválido");
                 return null;
             }
 
@@ -426,7 +519,6 @@ public class EnrollmentController implements Serializable {
 
             String token = getAuthToken();
             if (token == null) {
-                showErrorMessage("Sesión expirada. Por favor, inicie sesión nuevamente.");
                 return null;
             }
 
@@ -443,12 +535,9 @@ public class EnrollmentController implements Serializable {
             loadEnrolledClasses();
             loadAvailableSubjects();
 
-            showSuccessMessage("Matrícula realizada con éxito");
-
         } catch (Exception e) {
             System.err.println("Error en enrollGroup(): " + e.getMessage());
             e.printStackTrace();
-            showErrorMessage("Error al matricular grupo: " + e.getMessage());
         }
 
         return null;
@@ -457,7 +546,6 @@ public class EnrollmentController implements Serializable {
     public String cancelEnrollment(Object groupIdObj) {
         try {
             if (groupIdObj == null) {
-                showErrorMessage("ID de grupo inválido");
                 return null;
             }
 
@@ -470,7 +558,6 @@ public class EnrollmentController implements Serializable {
 
             String token = getAuthToken();
             if (token == null) {
-                showErrorMessage("Sesión expirada. Por favor, inicie sesión nuevamente.");
                 return null;
             }
 
@@ -501,19 +588,13 @@ public class EnrollmentController implements Serializable {
                 }
             });
 
-            // Recalcular créditos
-            enrolledCredits = calculateEnrolledCredits();
-
             // Recargar datos del servidor para asegurar consistencia
             loadEnrolledClasses();
             loadAvailableSubjects();
 
-            showSuccessMessage("Matrícula cancelada con éxito");
-
         } catch (Exception e) {
             System.err.println("Error en cancelEnrollment(): " + e.getMessage());
             e.printStackTrace();
-            showErrorMessage("Error al cancelar matrícula: " + e.getMessage());
         }
 
         return null;
@@ -522,49 +603,12 @@ public class EnrollmentController implements Serializable {
     public void refreshData() {
         try {
             loadStudentData();
+            loadCareerSubjects();
             loadEnrolledClasses();
             loadAvailableSubjects();
-            showSuccessMessage("Datos actualizados correctamente");
         } catch (Exception e) {
             System.err.println("Error en refreshData(): " + e.getMessage());
             e.printStackTrace();
-            showErrorMessage("Error al actualizar datos");
-        }
-    }
-
-    public void clearMessages() {
-        try {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (facesContext != null) {
-                facesContext.getMessageList().clear();
-            }
-        } catch (Exception e) {
-            System.err.println("Error clearing messages: " + e.getMessage());
-        }
-    }
-
-    private void showSuccessMessage(String message) {
-        addMessage(FacesMessage.SEVERITY_INFO, "Éxito", message);
-    }
-
-    private void showErrorMessage(String message) {
-        addMessage(FacesMessage.SEVERITY_ERROR, "Error", message);
-    }
-
-    private void showWarningMessage(String message) {
-        addMessage(FacesMessage.SEVERITY_WARN, "Advertencia", message);
-    }
-
-    private void addMessage(FacesMessage.Severity severity, String summary, String detail) {
-        try {
-            if (detail != null && !detail.trim().isEmpty()) {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                if (facesContext != null) {
-                    facesContext.addMessage(null, new FacesMessage(severity, summary, detail));
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error adding message: " + e.getMessage());
         }
     }
 
@@ -572,5 +616,38 @@ public class EnrollmentController implements Serializable {
     public void setSearchTerm(String searchTerm) {
         this.searchTerm = searchTerm != null ? searchTerm : "";
         filterSubjects();
+    }
+
+    // Getters explícitos necesarios para JSF
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public String getCareerName() {
+        return careerName;
+    }
+
+    public int getCurrentSemester() {
+        return currentSemester;
+    }
+
+    public List<Map<String, Object>> getEnrolledClasses() {
+        return enrolledClasses;
+    }
+
+    public List<Map<String, Object>> getAllSubjects() {
+        return allSubjects;
+    }
+
+    public List<Map<String, Object>> getFilteredSubjects() {
+        return filteredSubjects;
+    }
+
+    public String getSearchTerm() {
+        return searchTerm;
+    }
+
+    public List<Integer> getCareerSubjectIds() {
+        return careerSubjectIds;
     }
 }
