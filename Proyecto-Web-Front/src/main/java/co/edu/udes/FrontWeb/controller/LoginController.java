@@ -18,16 +18,26 @@ import java.util.Map;
 @Named("loginController")
 @SessionScoped
 public class LoginController implements Serializable {
-
+    private Long id;
     private String email;
     private String password;
     private String token;
     private String name;
     private String role;
 
+
     private static final String API_URL = "http://localhost:8080/api/auth/login";
 
     // Getters y setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }
@@ -62,6 +72,7 @@ public class LoginController implements Serializable {
                 this.name = (String) result.get("name");
                 Map<String,Object> roleMap = (Map<String,Object>) result.get("role");
                 this.role = roleMap != null ? (String) roleMap.get("name") : null;
+                this.id = ((Number) result.get("id")).longValue();
 
                 System.out.println(token + "token");
                 System.out.println(name + "name");
@@ -69,6 +80,7 @@ public class LoginController implements Serializable {
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("authToken", this.token);
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("userName", this.name);
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("userRole", this.role);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("IdUser",this.id);
 
                 return "home.xhtmlfaces-redirect=true";
 

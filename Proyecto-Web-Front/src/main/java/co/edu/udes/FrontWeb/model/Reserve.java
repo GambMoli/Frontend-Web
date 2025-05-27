@@ -14,9 +14,9 @@ import java.util.List;
 public class Reserve {
     private Long id;
     private String code;
-    private LocalDate reserveDate;
-    private LocalTime hourInit;
-    private LocalTime hourFinish;
+    private String reserveDate;
+    private String hourInit;
+    private String hourFinish;
     private String state;
     private Place place;
     private Student student;

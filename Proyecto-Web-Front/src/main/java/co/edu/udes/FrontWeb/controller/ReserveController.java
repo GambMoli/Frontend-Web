@@ -23,6 +23,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -140,6 +141,7 @@ public class ReserveController implements Serializable {
     // Cargar lugares al iniciar
     @PostConstruct
     public void init() {
+
         cargarLugares();
         listarReservas();
 
@@ -173,9 +175,9 @@ public class ReserveController implements Serializable {
         try {
             Reserve nuevaReserva = new Reserve();
             nuevaReserva.setCode("RES" + String.format("%04d", (int)(Math.random() * 10000)));
-            nuevaReserva.setReserveDate(LocalDate.parse(reserveDate));
-            nuevaReserva.setHourInit(LocalTime.parse(hourInit));
-            nuevaReserva.setHourFinish(LocalTime.parse(hourFinish));
+            nuevaReserva.setReserveDate(reserveDate);
+            nuevaReserva.setHourInit(hourInit);
+            nuevaReserva.setHourFinish(hourFinish);
             nuevaReserva.setState("ACTIVO");
 
             Place lugar = new Place();
@@ -266,9 +268,9 @@ public class ReserveController implements Serializable {
 
         try {
             Reserve reservaActualizada = new Reserve();
-            reservaActualizada.setReserveDate(LocalDate.parse(reserveDate));
-            reservaActualizada.setHourInit(LocalTime.parse(hourInit));
-            reservaActualizada.setHourFinish(LocalTime.parse(hourFinish));
+            reservaActualizada.setReserveDate(reserveDate);
+            reservaActualizada.setHourInit(hourInit);
+            reservaActualizada.setHourFinish(hourFinish);
 
             httpClientService.put(API_URL + "/" + idReservaSeleccionada, reservaActualizada, false);
 
