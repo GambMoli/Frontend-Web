@@ -2,6 +2,7 @@ package co.edu.udes.FrontWeb.controller;
 
 import co.edu.udes.FrontWeb.model.Loan;
 import co.edu.udes.FrontWeb.model.Reserve;
+import co.edu.udes.FrontWeb.model.Student;
 import co.edu.udes.FrontWeb.service.HttpClientService;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
@@ -27,6 +28,7 @@ public class StudentController implements Serializable {
 
     private List<Reserve> listReserve = new ArrayList<>();
     public List<Loan> listLoans= new ArrayList<>();
+    private List<Student> studentList = new ArrayList<>();
 
     private static final String API_URL = "http://localhost:8080/api/students";
 

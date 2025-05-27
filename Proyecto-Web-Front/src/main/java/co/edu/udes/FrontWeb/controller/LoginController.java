@@ -82,4 +82,5 @@ public class LoginController implements Serializable {
             return "error.xhtml";
         }
     }
+
 }

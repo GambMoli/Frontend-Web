@@ -26,45 +26,7 @@
             <h2 class="m-0">Subir Notas</h2>
 
         </div>
-        <!--<div class="ContainerTable">
-            <table class="table table-bordered table-striped">
-                <thead class="table-white">
-                <tr>
-                    <th>ID</th>
-                    <th>Código</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Nombre Carrera</th>
-                    <th>Acciones</th>
 
-                </tr>
-                </thead>
-                <tbody>
-                <ui:repeat var="student" value="#{studentController.studentList}">
-                    <tr>
-                        <td>#{student.id}</td>
-                        <td>#{student.code}</td>
-                        <td>#{student.name}</td>
-                        <td>#{student.email}</td>
-                        <td>#{student.careerName}</td>
-
-                        <td>
-                            <h:form styleClass="d-inline">
-                                <h:commandLink action="#{reserveController.prepareUpdate(reserve.id)}"
-                                               styleClass="text-decoration-none">
-                                    <f:ajax execute="@this"
-                                            render=":formEditar"
-                                            onevent="abrirModalUpdate" />
-                                    <i class="bi bi-pencil-square text-primary"></i>
-                                </h:commandLink>
-                            </h:form>
-                        </td>
-
-                    </tr>
-                </ui:repeat>
-                </tbody>
-            </table>
-        </div>-->
         <!-- Contenedor de tarjetas -->
 
         <h:form id="StudentsTable">
@@ -89,11 +51,13 @@
                             <td>#{student.email}</td>
                             <td>#{student.careerName}</td>
                             <td>
-                                <h:commandLink
-                                        value="Subir Notas"
-                                        action="#{teacherController.verEstudiantesPorGrupo}">
+                                <p:commandLink value="Subir Notas"
+                                               action="#{teacherController.seleccionarEstudiante(student.id)}"
+                                               oncomplete="PF('notaDialog').show()"
+                                               update=":formSubirNota">
                                     <f:setPropertyActionListener value="#{group.id}" target="#{teacherController.idGrupoSeleccionado}" />
-                                </h:commandLink>
+                                </p:commandLink>
+
                             </td>
                         </tr>
                     </ui:repeat>
@@ -101,7 +65,45 @@
 
                 </tbody>
             </table>
+            <div>
+                <h:commandButton value="Inicializar Periodos"
+                                 action="#{teacherController.inicializarPeriodosParaEstudiante}"
+                                 rendered="#{not empty teacherController.estudianteSeleccionado}" />
+            </div>
         </h:form>
+
+        <!-- Modal para subir notas -->
+        <p:dialog header="Subir Nota"
+                  widgetVar="notaDialog"
+                  modal="true"
+                  resizable="false"
+                  closable="true"
+                  width="400">
+
+            <h:form id="formSubirNota">
+                <div class="mb-3">
+                    <h:outputLabel for="periodo" value="Seleccione el Corte:" />
+                    <h:selectOneMenu id="periodo" value="#{teacherController.periodoSeleccionado}" styleClass="form-select">
+                        <f:selectItem itemLabel="Seleccione" itemValue="" />
+                        <f:selectItem itemLabel="Primer Corte" itemValue="PRIMERO" />
+                        <f:selectItem itemLabel="Segundo Corte" itemValue="SEGUNDO" />
+                        <f:selectItem itemLabel="Tercer Corte" itemValue="TERCERO" />
+                    </h:selectOneMenu>
+                </div>
+
+                <div class="mb-3">
+                    <h:outputLabel for="nota" value="Nota:" />
+                    <h:inputText id="nota" value="#{teacherController.nota}" styleClass="form-control">
+                        <f:validateDoubleRange minimum="0.0" maximum="5.0" />
+                    </h:inputText>
+                </div>
+
+                <p:commandButton value="Guardar"
+                                 action="#{teacherController.guardarNota}"
+                                 update=":StudentsTable"
+                                 oncomplete="PF('notaDialog').hide()" />
+            </h:form>
+        </p:dialog>
 
     </div>
 </h:body>
