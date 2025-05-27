@@ -52,7 +52,6 @@ public class LoginController implements Serializable {
             context.getExternalContext().getSessionMap().put("authToken", token);
             context.getExternalContext().getSessionMap().put("userName", this.name);
             context.getExternalContext().getSessionMap().put("userRole", this.role);
-
             setId((Integer) response.get("id"));
 
             return "home?faces-redirect=true";
