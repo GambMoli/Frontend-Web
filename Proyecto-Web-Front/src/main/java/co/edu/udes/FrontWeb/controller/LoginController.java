@@ -40,9 +40,7 @@ public class LoginController implements Serializable {
 
             Map<String, Object> response = (Map<String, Object>) httpClientService.post(API_URL, requestBody, false);
             System.out.println("Response received: " + response);
-
             this.name = (String) response.get("name");
-
             Map<String, Object> roleMap = (Map<String, Object>) response.get("role");
             this.role = roleMap != null ? (String) roleMap.get("name") : null;
 
