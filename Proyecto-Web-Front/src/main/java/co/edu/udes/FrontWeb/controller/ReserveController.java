@@ -35,6 +35,8 @@ public class ReserveController implements Serializable {
     @Inject
     private HttpClientService httpClientService;
 
+    @Inject TeacherController teacherController;
+
     private String reserveDate;
     private String hourInit;
     private String hourFinish;
@@ -141,21 +143,7 @@ public class ReserveController implements Serializable {
     // Cargar lugares al iniciar
     @PostConstruct
     public void init() {
-
         cargarLugares();
-        listarReservas();
-
-    }
-    public void listarReservas() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        try {
-            listaReservas = (List<Reserve>) httpClientService.get(API_URL, false);
-            context.getExternalContext().getSessionMap().put("listaReservas", listaReservas);
-        } catch (Exception e) {
-            e.printStackTrace();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error de conexión con el servidor.", null));
-        }
     }
 
     public String obtenerNombreLugar(Reserve reserva) {
@@ -199,7 +187,7 @@ public class ReserveController implements Serializable {
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva guardada correctamente.", null));
-            listarReservas();
+
             limpiarFormulario();
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,7 +264,7 @@ public class ReserveController implements Serializable {
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva actualizada correctamente.", null));
-            listarReservas();
+
             limpiarFormulario();
         } catch (Exception e) {
             e.printStackTrace();
@@ -298,7 +286,7 @@ public class ReserveController implements Serializable {
             httpClientService.delete(API_URL + "/" + id, false);
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva eliminada correctamente.", null));
-            listarReservas();
+
         } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,

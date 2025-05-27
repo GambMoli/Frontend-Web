@@ -1,6 +1,7 @@
 package co.edu.udes.FrontWeb.controller;
 
 import co.edu.udes.FrontWeb.model.Group;
+import co.edu.udes.FrontWeb.model.Reserve;
 import co.edu.udes.FrontWeb.service.HttpClientService;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
@@ -23,6 +24,7 @@ public class TeacherController implements Serializable {
 
 
     private List<Group> listaGrupos = new ArrayList<>();
+    private List<Reserve> listReserve = new ArrayList<>();
     private Group selectedGroup;
     private Long idGrupoSeleccionado;
 
@@ -54,15 +56,24 @@ public class TeacherController implements Serializable {
         this.listaGrupos = listaGrupos;
     }
 
+    public List<Reserve> getListReserve() {
+        return listReserve;
+    }
+
+    public void setListReserve(List<Reserve> listReserve) {
+        this.listReserve = listReserve;
+    }
+
     @PostConstruct
     public void init() {
         System.out.println("Se ejecuta init() de GroupController");
         System.out.println("Desde session: " + loginController.getId());
         System.out.println("Desde loginController.getId(): " + loginController.getId());
 
-        Long id = loginController.getId(); // o usa getUserIdFromSession()
+        Long id = loginController.getId().longValue(); // o usa getUserIdFromSession()
         if (id != null) {
             ListarGrupos(id);
+            ListarReservas(id);
         } else {
             System.out.println("ID de usuario es null, no se puede listar grupos");
         }
@@ -79,6 +90,19 @@ public class TeacherController implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error de conexión con el servidor.", null));
         }
+    }
+    public void ListarReservas(Long id){
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            listReserve = (List<Reserve>) httpClientService.get(API_URL + "/" + id + "/my_reserve", false);
+            context.getExternalContext().getSessionMap().put("ListaReservas", listReserve);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error de conexión con el servidor.", null));
+        }
+
     }
     public String verEstudiantesPorGrupo() {
         // Podrías guardar el ID en sesión si quieres usarlo en otra página
