@@ -64,4 +64,22 @@ public class LoginController implements Serializable {
             return null;
         }
     }
+    public String redirigirReserva() {
+        if ("TEACHER".equals(role)) {
+            return "ReservePage.xhtml?faces-redirect=true";
+        } else if ("STUDENT".equals(role)) {
+            return "ReserveStudent.xhtml?faces-redirect=true";
+        } else {
+            return "error.xhtml";
+        }
+    }
+    public String redirigirLibreria(){
+        if ("TEACHER".equals(role)) {
+            return "loan_library.xhtml?faces-redirect=true";
+        } else if ("STUDENT".equals(role)) {
+            return "loan_Students.xhtml?faces-redirect=true";
+        } else {
+            return "error.xhtml";
+        }
+    }
 }

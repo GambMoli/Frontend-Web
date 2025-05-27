@@ -18,8 +18,8 @@ public class Reserve {
     private String hourInit;
     private String hourFinish;
     private String state;
-    private Place place;
-    private Student student;
-    private Teacher teacher;
+    private Place placeId;
+    private Student studentId;
+    private Teacher teacherId;
 
 }

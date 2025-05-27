@@ -1,6 +1,7 @@
 package co.edu.udes.FrontWeb.controller;
 
 import co.edu.udes.FrontWeb.model.Group;
+import co.edu.udes.FrontWeb.model.Loan;
 import co.edu.udes.FrontWeb.model.Reserve;
 import co.edu.udes.FrontWeb.service.HttpClientService;
 import jakarta.annotation.PostConstruct;
@@ -25,12 +26,21 @@ public class TeacherController implements Serializable {
 
     private List<Group> listaGrupos = new ArrayList<>();
     private List<Reserve> listReserve = new ArrayList<>();
+    public List<Loan> listLoans= new ArrayList<>();
     private Group selectedGroup;
     private Long idGrupoSeleccionado;
 
     private static final String API_URL = "http://localhost:8080/api/teachers";
     //Getters y setters
 
+
+    public List<Loan> getListLoans() {
+        return listLoans;
+    }
+
+    public void setListLoans(List<Loan> listLoans) {
+        this.listLoans = listLoans;
+    }
 
     public Long getIdGrupoSeleccionado() {
         return idGrupoSeleccionado;
@@ -74,6 +84,7 @@ public class TeacherController implements Serializable {
         if (id != null) {
             ListarGrupos(id);
             ListarReservas(id);
+            ListarPrestamos(id);
         } else {
             System.out.println("ID de usuario es null, no se puede listar grupos");
         }
@@ -103,6 +114,25 @@ public class TeacherController implements Serializable {
                     "Error de conexión con el servidor.", null));
         }
 
+    }
+
+    public void ListarPrestamos(Long id){
+        FacesContext context = FacesContext.getCurrentInstance();
+         try {
+            listLoans = (List<Loan>) httpClientService.get(API_URL + "/" + id + "/my_loans", false);
+            context.getExternalContext().getSessionMap().put("ListaLoans", listLoans);
+
+         }catch (Exception e) {
+            e.printStackTrace();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error de conexión con el servidor.", null));
+         }
+    }
+    public String obtenerNombreMaterial(Loan loan) {
+        if (loan == null || loan.getMaterial() == null) {
+            return "Material no disponible";
+        }
+        return loan.getMaterial().getName(); // Ajusta según tu estructura de clases
     }
     public String verEstudiantesPorGrupo() {
         // Podrías guardar el ID en sesión si quieres usarlo en otra página
