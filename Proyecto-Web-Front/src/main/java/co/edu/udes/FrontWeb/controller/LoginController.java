@@ -7,6 +7,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import co.edu.udes.FrontWeb.service.HttpClientService;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -34,14 +35,13 @@ public class LoginController implements Serializable {
                     "email", email,
                     "password", password
             );
-
             System.out.println("Attempting login to: " + API_URL);
             System.out.println("With email: " + email);
 
             Map<String, Object> response = (Map<String, Object>) httpClientService.post(API_URL, requestBody, false);
             System.out.println("Response received: " + response);
             this.name = (String) response.get("name");
-            Map<String, Object> roleMap = (Map<String, Object>) response.get("role");
+            Map<String,Object> roleMap = (Map<String,Object>) response.get("role");
             this.role = roleMap != null ? (String) roleMap.get("name") : null;
 
             String token = (String) response.get("token");
