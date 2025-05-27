@@ -24,114 +24,53 @@
     <div class="container mt-4 record-container">
         <div class="card">
             <div class="card-header">
-                <h3 class="m-0"><i class="fas fa-graduation-cap me-2"></i>Record Académico</h3>
+                <h3 class="m-0">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    Record Académico
+                </h3>
             </div>
 
             <div class="card-body">
-                <!-- Acordeón de periodos académicos -->
-                <div class="accordion" id="periodsAccordion">
-                    <!-- Periodo 1 -->
-                    <div class="accordion-item mb-3">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#period2023-1">
-                                <strong>2023-1</strong> - Primer Semestre 2023
-                            </button>
-                        </h2>
-                        <div id="period2023-1" class="accordion-collapse collapse show" data-bs-parent="#periodsAccordion">
-                            <div class="accordion-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead class="table-light">
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Asignatura</th>
-                                            <th>Créditos</th>
-                                            <th>Corte 1</th>
-                                            <th>Corte 2</th>
-                                            <th>Corte 3</th>
-                                            <th>Definitiva</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>10101</td>
-                                            <td>MATEMÁTICAS BÁSICAS</td>
-                                            <td>4</td>
-                                            <td>3.8</td>
-                                            <td>4.2</td>
-                                            <td>4.5</td>
-                                            <td><strong>4.2</strong></td>
-                                            <td><span class="badge bg-success">Aprobada</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>10102</td>
-                                            <td>INTRODUCCIÓN A LA PROGRAMACIÓN</td>
-                                            <td>3</td>
-                                            <td>4.5</td>
-                                            <td>4.7</td>
-                                            <td>4.8</td>
-                                            <td><strong>4.7</strong></td>
-                                            <td><span class="badge bg-success">Aprobada</span></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Periodo 2 -->
-                    <div class="accordion-item mb-3">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#period2023-2">
-                                <strong>2023-2</strong> - Segundo Semestre 2023
-                            </button>
-                        </h2>
-                        <div id="period2023-2" class="accordion-collapse collapse" data-bs-parent="#periodsAccordion">
-                            <div class="accordion-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead class="table-light">
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Asignatura</th>
-                                            <th>Créditos</th>
-                                            <th>Corte 1</th>
-                                            <th>Corte 2</th>
-                                            <th>Corte 3</th>
-                                            <th>Definitiva</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>10201</td>
-                                            <td>CÁLCULO DIFERENCIAL</td>
-                                            <td>4</td>
-                                            <td>3.5</td>
-                                            <td>3.8</td>
-                                            <td>4.0</td>
-                                            <td><strong>3.8</strong></td>
-                                            <td><span class="badge bg-success">Aprobada</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>10202</td>
-                                            <td>ESTRUCTURAS DE DATOS</td>
-                                            <td>3</td>
-                                            <td>4.2</td>
-                                            <td>4.0</td>
-                                            <td>3.9</td>
-                                            <td><strong>4.0</strong></td>
-                                            <td><span class="badge bg-success">Aprobada</span></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                <h:panelGroup rendered="#{academicRecordController.error}">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        #{academicRecordController.errorMessage}
                     </div>
-                </div>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{not academicRecordController.loading and not academicRecordController.error}">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Asignatura</th>
+                                <th>Corte 1</th>
+                                <th>Corte 2</th>
+                                <th>Corte 3</th>
+                                <th>Definitiva</th>
+                                <th>Estado</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <ui:repeat value="#{academicRecordController.currentSemesterGrades}" var="subject">
+                                <tr>
+                                    <td>#{subject.subjectName}</td>
+                                    <td>#{subject.grade1}</td>
+                                    <td>#{subject.grade2}</td>
+                                    <td>#{subject.grade3}</td>
+                                    <td><strong>#{subject.finalGrade}</strong></td>
+                                    <td>
+                                            <span class="badge #{subject.approved ? 'bg-success' : 'bg-danger'}">
+                                                #{subject.approved ? 'Aprobada' : 'Reprobada'}
+                                            </span>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                </h:panelGroup>
             </div>
         </div>
     </div>

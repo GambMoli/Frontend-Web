@@ -120,7 +120,7 @@ public class ProfileController implements Serializable {
             System.out.println("Subject ID: " + subject.get("id"));
             System.out.println("Subject Name: " + subject.get("name"));
 
-            // Get final grade from specific endpoint
+            // Get final grade and approval status from specific endpoint
             try {
                 String studentId = String.valueOf(loginController.getId());
                 Object subjectIdObj = subject.get("id");
@@ -129,6 +129,9 @@ public class ProfileController implements Serializable {
                     System.out.println("Missing studentId or subjectId");
                     if (subject.containsKey("grade")) {
                         mapped.put("grade", subject.get("grade"));
+                    }
+                    if (subject.containsKey("approved")) {
+                        mapped.put("approved", subject.get("approved"));
                     }
                     return mapped;
                 }
@@ -149,14 +152,22 @@ public class ProfileController implements Serializable {
                         mapped.put("grade", gradeInfo.get("finalGrade"));
                         System.out.println("Final grade obtained: " + gradeInfo.get("finalGrade"));
                     }
+                    if (gradeInfo.containsKey("approved")) {
+                        mapped.put("approved", gradeInfo.get("approved"));
+                        System.out.println("Approval status obtained: " + gradeInfo.get("approved"));
+                    }
                 } else if (response instanceof List) {
                     System.out.println("Received list response for grades - processing first grade if available");
                     List<?> gradeList = (List<?>) response;
                     if (!gradeList.isEmpty() && gradeList.get(0) instanceof Map) {
                         Map<?, ?> firstGrade = (Map<?, ?>) gradeList.get(0);
-                        if (firstGrade.containsKey("finalGrade")) {  // ✅ CAMBIA A "finalGrade"
+                        if (firstGrade.containsKey("finalGrade")) {
                             mapped.put("grade", firstGrade.get("finalGrade"));
                             System.out.println("Final grade from list: " + firstGrade.get("finalGrade"));
+                        }
+                        if (firstGrade.containsKey("approved")) {
+                            mapped.put("approved", firstGrade.get("approved"));
+                            System.out.println("Approval status from list: " + firstGrade.get("approved"));
                         }
                     }
                 }
@@ -164,6 +175,10 @@ public class ProfileController implements Serializable {
                 // Fallback to subject's grade if exists
                 if (!mapped.containsKey("grade") && subject.containsKey("grade")) {
                     mapped.put("grade", subject.get("grade"));
+                }
+                // Fallback to subject's approval status if exists
+                if (!mapped.containsKey("approved") && subject.containsKey("approved")) {
+                    mapped.put("approved", subject.get("approved"));
                 }
             } catch (RuntimeException e) {
                 if (e.getMessage().contains("NO_GRADES_FOUND_FOR_SUBJECT")) {
@@ -174,10 +189,16 @@ public class ProfileController implements Serializable {
                 if (subject.containsKey("grade")) {
                     mapped.put("grade", subject.get("grade"));
                 }
+                if (subject.containsKey("approved")) {
+                    mapped.put("approved", subject.get("approved"));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (subject.containsKey("grade")) {
                     mapped.put("grade", subject.get("grade"));
+                }
+                if (subject.containsKey("approved")) {
+                    mapped.put("approved", subject.get("approved"));
                 }
             }
 
