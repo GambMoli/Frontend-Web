@@ -1,16 +1,19 @@
 package co.edu.udes.FrontWeb.service;
+
 import jakarta.inject.Inject;
-import org.springframework.stereotype.Service;
 import jakarta.faces.context.FacesContext;
+import org.springframework.stereotype.Service;
+
 import java.io.Serializable;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.URI;
 import java.time.Duration;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class HttpClientService implements Serializable {
@@ -70,7 +73,6 @@ public class HttpClientService implements Serializable {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() >= 200 && response.statusCode() < 300) {
-            // Try to parse as array first, then as object
             try {
                 return mapper.readValue(response.body(), List.class);
             } catch (Exception e) {
