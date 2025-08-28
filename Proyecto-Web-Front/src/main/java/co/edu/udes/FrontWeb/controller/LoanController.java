@@ -31,12 +31,21 @@ public class LoanController implements Serializable {
 
     @Inject
     private HttpClientService httpClientService;
+
+    @Inject
+    private TeacherController teacherController;
+
+    @Inject
+    private LoginController loginController;
+
+    @Inject
+    private StudentController studentController;
+
     private static final String API_URL = "http://localhost:8080/api/loan";
 
     private Loan loan =new Loan();
 
     private List<Material> listaMateriales= new ArrayList<>();
-    private List<Loan> listaPrestamos= new ArrayList<>();
 
     private String code;
     private String loanDate;
@@ -138,13 +147,6 @@ public class LoanController implements Serializable {
         this.teacherId = teacherId;
     }
 
-    public List<Loan> getListaPrestamos() {
-        return listaPrestamos;
-    }
-
-    public void setListaPrestamos(List<Loan> listaPrestamos) {
-        this.listaPrestamos = listaPrestamos;
-    }
 
     public List<Material> getListaMateriales() {
         return listaMateriales;
@@ -165,7 +167,26 @@ public class LoanController implements Serializable {
 
     @PostConstruct
     public void init(){
-        listLoans();
+        System.out.println("Se ejecuta init() de LoanController");
+
+        if (loginController != null && loginController.getId() != null && loginController.getRole() != null) {
+            Long id = loginController.getId().longValue();
+            String role = loginController.getRole();
+
+            if ("STUDENT".equalsIgnoreCase(role)) {
+                this.studentId = id;
+                this.userType = "student";
+            } else if ("TEACHER".equalsIgnoreCase(role)) {
+                this.teacherId = id;
+                this.userType = "teacher";
+            }
+            teacherController.ListarPrestamos(loginController.getId().longValue());
+            studentController.ListarPrestamos(loginController.getId().longValue());
+
+            System.out.println("Usuario identificado como " + userType + " con ID: " + id);
+        } else {
+            System.out.println("ID o rol del usuario no están disponibles desde LoginController.");
+        }
     }
 
 
@@ -214,7 +235,8 @@ public class LoanController implements Serializable {
             httpClientService.post(API_URL, newLoan, false);
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva guardada correctamente.", null));
-            listLoans();
+            teacherController.ListarPrestamos(loginController.getId().longValue());
+            studentController.ListarPrestamos(loginController.getId().longValue());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -226,36 +248,8 @@ public class LoanController implements Serializable {
 
 
 
-    public String obtenerNombreMaterial(Loan loan) {
-        return loan.getMaterial() != null ?
-                loan.getMaterial().getName() :
-                "Material no encontrado";
-    }
 
-    public void listLoans(){
-        FacesContext context = FacesContext.getCurrentInstance();
-        try{
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/loan"))
-                    .GET()
-                    .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JavaTimeModule());
-                listaPrestamos = mapper.readValue(response.body(), new TypeReference<List<Loan>>() {});
-            }
-            context.getExternalContext().getSessionMap().put("ListaPrestamos", listaPrestamos);
-
-        }catch (Exception e) {
-            e.printStackTrace();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error de conexión con el servidor.", null));
-        }
-    }
     public void UploadLoan(Long id) {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
@@ -301,7 +295,8 @@ public class LoanController implements Serializable {
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva actualizada correctamente.", null));
-            listLoans();
+            teacherController.ListarPrestamos(loginController.getId().longValue());
+            studentController.ListarPrestamos(loginController.getId().longValue());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,6 +308,8 @@ public class LoanController implements Serializable {
     public String updateLoan(){
         System.out.println("✅ ID recibido directamente: " + idReservaSeleccionada);
         UpdateLoan(idReservaSeleccionada);
+        teacherController.ListarPrestamos(loginController.getId().longValue());
+        studentController.ListarPrestamos(loginController.getId().longValue());
         return null;
     }
 
@@ -322,7 +319,8 @@ public class LoanController implements Serializable {
             httpClientService.delete(API_URL + "/" + id, false);
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva eliminada correctamente.", null));
-            listLoans();
+            teacherController.ListarPrestamos(loginController.getId().longValue());
+            studentController.ListarPrestamos(loginController.getId().longValue());
         } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -332,6 +330,8 @@ public class LoanController implements Serializable {
     public String deleteLoanWithParams(Long id) {
         System.out.println("✅ ID recibido directamente: " + id);
         deleteLoan(id);
+        teacherController.ListarPrestamos(loginController.getId().longValue());
+        studentController.ListarPrestamos(loginController.getId().longValue());
         return null;
     }
 

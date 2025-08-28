@@ -20,17 +20,23 @@
             <div class="row g-4 r">
 
                 <div class="col-md-4 col-sm-6">
-                    <h:link outcome="/loan_library" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
-                        <i class="fa-brands fa-rocketchat me-2"></i>
-                        Reserva Libros
-                    </h:link>
+                    <h:form>
+                        <h:commandLink action="#{loginController.redirigirLibreria}"
+                                       styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                            <i class="fa-brands fa-rocketchat me-2"></i>
+                            Reserva Libros
+                        </h:commandLink>
+                    </h:form>
                 </div>
 
                 <div class="col-md-4 col-sm-6">
-                    <h:link outcome="/ReservePage" styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-briefcase me-2"></i>
-                        Reserva Espacios
-                    </h:link>
+                    <h:form>
+                        <h:commandLink action="#{loginController.redirigirReserva}"
+                                       styleClass="btn btn-outline-primary custom-btn w-100 d-flex align-items-center justify-content-center">
+                            <i class="fa-brands fa-rocketchat me-2"></i>
+                            Reserva Espacios
+                        </h:commandLink>
+                    </h:form>
                 </div>
 
                 <div class="col-md-4 col-sm-6">

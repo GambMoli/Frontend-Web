@@ -15,6 +15,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -35,7 +36,14 @@ public class ReserveController implements Serializable {
     @Inject
     private HttpClientService httpClientService;
 
-    @Inject TeacherController teacherController;
+    @Inject
+    private LoginController loginController;
+
+    @Inject
+    private TeacherController teacherController;
+
+    @Inject
+    private StudentController studentController;
 
     private String reserveDate;
     private String hourInit;
@@ -143,11 +151,32 @@ public class ReserveController implements Serializable {
     // Cargar lugares al iniciar
     @PostConstruct
     public void init() {
+        System.out.println("Se ejecuta init() de ReserveController");
+
+        if (loginController != null && loginController.getId() != null && loginController.getRole() != null) {
+            Long id = loginController.getId().longValue();
+            String role = loginController.getRole();
+
+            if ("STUDENT".equalsIgnoreCase(role)) {
+                this.studentId = id;
+                this.userType = "student";
+            } else if ("TEACHER".equalsIgnoreCase(role)) {
+                this.teacherId = id;
+                this.userType = "teacher";
+            }
+            teacherController.ListarReservas(loginController.getId().longValue());
+            studentController.ListarReservas(loginController.getId().longValue());
+
+            System.out.println("Usuario identificado como " + userType + " con ID: " + id);
+        } else {
+            System.out.println("ID o rol del usuario no están disponibles desde LoginController.");
+        }
+
         cargarLugares();
     }
 
     public String obtenerNombreLugar(Reserve reserva) {
-        return (reserva.getPlace() != null && reserva.getPlace().getName() != null) ? reserva.getPlace().getName() : "Sin lugar";
+        return (reserva.getPlaceId() != null && reserva.getPlaceId().getName() != null) ? reserva.getPlaceId().getName() : "Sin lugar";
     }
 
     public void guardarReserva() {
@@ -170,23 +199,34 @@ public class ReserveController implements Serializable {
 
             Place lugar = new Place();
             lugar.setId(placeId);
-            nuevaReserva.setPlace(lugar);
+            System.out.println("ID DEL LUGAR:" + lugar);
+            nuevaReserva.setPlaceId(lugar);
+
+
+
 
             if ("student".equals(userType)) {
-                Student estudiante = new Student();
-                estudiante.setId(studentId);
-                nuevaReserva.setStudent(estudiante);
-
+                Student s = new Student();
+                s.setId(studentId);
+                nuevaReserva.setStudentId(s); // CAMBIO IMPORTANTE
+            } else if ("teacher".equals(userType)) {
+                Teacher t = new Teacher();
+                t.setId(teacherId);
+                nuevaReserva.setTeacherId(t); // CAMBIO IMPORTANTE
             } else {
-                Teacher profesor = new Teacher();
-                profesor.setId(teacherId);
-                nuevaReserva.setTeacher(profesor);
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "No se puede guardar la reserva: usuario no identificado.", null));
+                return;
             }
-
+            System.out.println("LA RESWERVA NUEVA ES:" + nuevaReserva);
             httpClientService.post(API_URL, nuevaReserva, false);
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva guardada correctamente.", null));
+
+
+            teacherController.ListarReservas(loginController.getId().longValue());
+            studentController.ListarReservas(loginController.getId().longValue());
 
             limpiarFormulario();
         } catch (Exception e) {
@@ -195,6 +235,7 @@ public class ReserveController implements Serializable {
                     "Error al guardar la reserva.", null));
         }
     }
+
 
     public void limpiarFormulario() {
         this.reserveDate = null;
@@ -232,17 +273,26 @@ public class ReserveController implements Serializable {
     public void UploadReserve(Long id) {
         FacesContext context = FacesContext.getCurrentInstance();
         try {
-            Reserve reserva = (Reserve) httpClientService.get(API_URL + "/" + id, false);
+            // Recibe el JSON crudo
+            Object json = httpClientService.get(API_URL + "/" + id, false);
+
+            // Deserializa con ObjectMapper a la clase Reserve
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule()); // soporte para fechas
+            Reserve reserva = mapper.convertValue(json, Reserve.class);
+
             this.idReservaSeleccionada = reserva.getId();
-            this.reserveDate = reserva.getReserveDate().toString();
-            this.hourInit = reserva.getHourInit().toString();
-            this.hourFinish = reserva.getHourFinish().toString();
+            this.reserveDate = reserva.getReserveDate();
+            this.hourInit = reserva.getHourInit();
+            this.hourFinish = reserva.getHourFinish();
+
         } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al cargar la reserva.", null));
         }
     }
+
     public void prepareUpdate(Long id) {
         UploadReserve(id); // carga los datos en el formulario
     }
@@ -265,6 +315,9 @@ public class ReserveController implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva actualizada correctamente.", null));
 
+            teacherController.ListarReservas(loginController.getId().longValue());
+            studentController.ListarReservas(loginController.getId().longValue());
+
             limpiarFormulario();
         } catch (Exception e) {
             e.printStackTrace();
@@ -276,6 +329,8 @@ public class ReserveController implements Serializable {
     public String updateReserve(){
         System.out.println("✅ ID recibido directamente: " + idReservaSeleccionada);
         UpdateReserve(idReservaSeleccionada);
+        studentController.ListarReservas(loginController.getId().longValue());
+
         return null;
     }
 
@@ -287,6 +342,10 @@ public class ReserveController implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Reserva eliminada correctamente.", null));
 
+
+            teacherController.ListarReservas(loginController.getId().longValue());
+            studentController.ListarReservas(loginController.getId().longValue());
+
         } catch (Exception e) {
             e.printStackTrace();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -296,6 +355,8 @@ public class ReserveController implements Serializable {
     public String deleteReserveConParametro(Long id) {
         System.out.println("✅ ID recibido directamente: " + id);
         DeleteReserve(id);
+        studentController.ListarReservas(loginController.getId().longValue());
+
         return null;
     }
 

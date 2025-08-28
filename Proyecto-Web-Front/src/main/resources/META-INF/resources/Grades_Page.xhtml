@@ -26,45 +26,6 @@
             <h2 class="m-0">Subir Notas</h2>
 
         </div>
-        <!--<div class="ContainerTable">
-            <table class="table table-bordered table-striped">
-                <thead class="table-white">
-                <tr>
-                    <th>ID</th>
-                    <th>Código</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Nombre Carrera</th>
-                    <th>Acciones</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                <ui:repeat var="student" value="#{studentController.studentList}">
-                    <tr>
-                        <td>#{student.id}</td>
-                        <td>#{student.code}</td>
-                        <td>#{student.name}</td>
-                        <td>#{student.email}</td>
-                        <td>#{student.careerName}</td>
-
-                        <!-<td>
-                            <h:form styleClass="d-inline">
-                                <h:commandLink action="#{reserveController.prepareUpdate(reserve.id)}"
-                                               styleClass="text-decoration-none">
-                                    <f:ajax execute="@this"
-                                            render=":formEditar"
-                                            onevent="abrirModalUpdate" />
-                                    <i class="bi bi-pencil-square text-primary"></i>
-                                </h:commandLink>
-                            </h:form>
-                        </td>
-
-                    </tr>
-                </ui:repeat>
-                </tbody>
-            </table>
-        </div>-->
         <!-- Contenedor de tarjetas -->
         <h:form id="groupTable">
             <table class="table table-bordered table-striped">
@@ -95,39 +56,20 @@
                         </td>
                         <td>
                             <!--DEBE DE MOSTRAR UN BOTON QUE DIRECCIONE A OTRA PAGINA DONDE MUESTRE UNA TABLA DE ESTUDIANTES MATRIUCLADOS -->
-                                <h:commandLink
-                                        value="Ver Estudiantes"
-                                        action="#{teacherController.verEstudiantesPorGrupo}">
-                                    <f:setPropertyActionListener value="#{group.id}" target="#{teacherController.idGrupoSeleccionado}" />
-                                </h:commandLink>
+                            <h:commandLink
+                                    value="Ver Estudiantes"
+                                    action="#{teacherController.verEstudiantesPorGrupo}">
+
+                                <f:setPropertyActionListener value="#{group.id}" target="#{teacherController.idGrupoSeleccionado}" />
+                                <f:setPropertyActionListener value="#{group.subjectId}" target="#{teacherController.subjectIdSeleccionado}" />
+                            </h:commandLink>
+
                         </td>
                     </tr>
                 </ui:repeat>
                 </tbody>
             </table>
         </h:form>
-
-        <!-- Modal con estudiantes -->
-        <p:dialog header="Estudiantes del grupo"
-                  widgetVar="studentDialog"
-                  modal="true"
-                  resizable="false"
-                  width="700">
-
-            <h:form id="studentDialogForm">
-                <p:dataTable value="#{groupController.selectedGroup.students}" var="student">
-                    <p:column headerText="ID">#{student.id}</p:column>
-                    <p:column headerText="Código">#{student.code}</p:column>
-                    <p:column headerText="Nombre">#{student.name}</p:column>
-                    <p:column headerText="Correo">#{student.email}</p:column>
-                    <p:column headerText="Carrera">#{student.careerName}</p:column>
-                </p:dataTable>
-            </h:form>
-        </p:dialog>
-
-
-
-
 
     </div>
 </h:body>

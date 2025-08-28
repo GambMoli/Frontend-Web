@@ -71,33 +71,33 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <h:form id="confirmForm" prependId="false">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLoanLabel">Fecha del Préstamo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-
-                    <div class="modal-body">
-
-                        <div class="mb-3">
-                            <label>Fecha de Préstamo</label>
-                            <h:inputText id="loanDate" value="#{loanController.loanDate}"
-                                         styleClass="form-control" required="true"
-                                         requiredMessage="La fecha es obligatoria">
-                                <f:convertDateTime pattern="yyyy-MM-dd" />
-                                <f:passThroughAttribute name="type" value="date" />
-                            </h:inputText>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLoanLabel">Fecha del Préstamo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
-                    </div>
 
-                    <div class="modal-footer">
+                        <div class="modal-body">
 
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <h:commandButton value="Guardar"
-                                         action="#{loanController.saveLoan}"
-                                         styleClass="btn btn-primary">
-                        </h:commandButton>
+                            <div class="mb-3">
+                                <label>Fecha de Préstamo</label>
+                                <h:inputText id="loanDate" value="#{loanController.loanDate}"
+                                             styleClass="form-control" required="true"
+                                             requiredMessage="La fecha es obligatoria">
+                                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                                    <f:passThroughAttribute name="type" value="date" />
+                                </h:inputText>
+                            </div>
+                        </div>
 
-                    </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <h:commandButton value="Guardar"
+                                             action="#{loanController.saveLoan}"
+                                             styleClass="btn btn-primary">
+                            </h:commandButton>
+
+                        </div>
                     </h:form>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <ui:repeat var="loan" value="#{teacherController.listLoans}">
+                        <ui:repeat var="loan" value="#{studentController.listLoans}">
 
                             <tr>
 
